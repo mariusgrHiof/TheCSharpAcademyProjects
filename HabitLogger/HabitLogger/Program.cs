@@ -8,12 +8,17 @@ LogService logService = new LogService();
 
 logService.SetupDatabase("Time");
 
-var result = logService.Add(new LogLearningCSharp
-{
-    Hours = -12,
-});
+//var result = logService.AddLog(new LogLearningCSharp
+//{
+//    Hours = 125,
+//});
 
-if (result != null)
+//if (result != null)
+//{
+//    Console.WriteLine($"{result.Hours} has been logged!");
+//}
+
+logService.Update(5, new LogLearningCSharp
 {
-    Console.WriteLine($"{result.Hours} has been logged!");
-}
+    Hours = 3437,
+});
