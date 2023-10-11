@@ -14,6 +14,7 @@
         {
             if (newLog != null && newLog.Hours > 0)
             {
+
                 dbManager.Add(newLog.Hours);
             }
             else
@@ -41,9 +42,11 @@
             return updateLog;
         }
 
-        public void GetAll()
+        public List<LogLearningCSharp> GetAll()
         {
-            dbManager.GetAll();
+            List<LogLearningCSharp> logs = dbManager.GetAll();
+
+            return logs;
         }
 
         public void GetLog()
@@ -76,36 +79,21 @@
 
         }
 
-        public void DeleteLog()
+        public LogLearningCSharp? DeleteLog(int id)
         {
-            bool keepGoing = true;
+            var log = dbManager.Get(id);
+            if (log is null) return null;
 
-            while (keepGoing)
+            int result = dbManager.Delete(log.Id);
+            if (result == 0)
             {
-
-                try
-                {
-                    Console.Write("Enter an id to delete(type 0 to quit):");
-                    string input = Console.ReadLine();
-                    int inputId = Convert.ToInt32(input);
-
-                    if (inputId == 0)
-                    {
-                        keepGoing = false;
-                        break;
-                    }
-
-                    dbManager.Delete(inputId);
-                }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine("Enter a valid id");
-                }
-
-
-
-
+                Console.WriteLine("Failed to delete record.");
+                return null;
             }
+
+            return log;
+
+
         }
     }
 }

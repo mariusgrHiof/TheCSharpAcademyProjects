@@ -32,14 +32,28 @@ namespace HabitLogger
             {
                 connection.Open();
 
-                var command = connection.CreateCommand();
-                command.CommandText = $"INSERT INTO log (Hours) VALUES({hours})";
-                command.ExecuteNonQuery();
+                string queryString = "INSERT INTO log (Hours) VALUES(@Hours)";
+
+                SqliteCommand command = new SqliteCommand(queryString, connection);
+                command.Parameters.Add("Hours", SqliteType.Integer, hours).Value = hours;
+
+
+                try
+                {
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
         }
 
-        public void Get(int id)
+        public LogLearningCSharp Get(int id)
         {
+            int logId = 0;
+            int hours = 0;
             using (SqliteConnection connection = new SqliteConnection($"Data Source=Time.db"))
             {
                 connection.Open();
@@ -54,17 +68,24 @@ namespace HabitLogger
                 {
                     while (reader.Read())
                     {
-                        var logId = reader.GetString(0);
-                        var hours = reader.GetString(1);
+                        logId = Convert.ToInt32(reader.GetString(0));
+                        hours = Convert.ToInt32(reader.GetString(1));
 
-                        Console.WriteLine($"ID: {logId}, Hours: {hours}");
+
                     }
                 }
             }
+
+            return new LogLearningCSharp
+            {
+                Hours = hours,
+                Id = logId
+            };
         }
 
-        public void GetAll()
+        public List<LogLearningCSharp> GetAll()
         {
+            List<LogLearningCSharp> logs = new List<LogLearningCSharp>();
             using (SqliteConnection connection = new SqliteConnection($"Data Source=Time.db"))
             {
                 connection.Open();
@@ -72,32 +93,60 @@ namespace HabitLogger
                 var command = connection.CreateCommand();
                 command.CommandText = $"SELECT Id, Hours " +
                     $"FROM log";
-                command.ExecuteNonQuery();
+
+                try
+                {
+
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        var logId = reader.GetString(0);
-                        var hours = reader.GetString(1);
+                        var logId = Convert.ToInt32(reader.GetString(0));
+                        var hours = Convert.ToInt32(reader.GetString(1));
 
-                        Console.WriteLine($"ID: {logId}, Hours: {hours}");
+                        logs.Add(new LogLearningCSharp
+                        {
+                            Id = logId,
+                            Hours = hours
+                        });
+
                     }
                 }
             }
+
+            return logs;
         }
 
-        public void Delete(int id)
+        public int Delete(int id)
         {
+            int result = 0;
             using (var connection = new SqliteConnection("Data Source = Time.db"))
             {
+
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = $"DELETE FROM log WHERE Id = {id}";
 
 
-                command.ExecuteNonQuery();
+                try
+                {
+                    result = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Fail to delete record.");
+                }
             }
+
+            return result;
         }
 
 
