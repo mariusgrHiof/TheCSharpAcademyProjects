@@ -42,6 +42,14 @@
             return updateLog;
         }
 
+        public LogLearningCSharp GetLog(int id)
+        {
+            var log = dbManager.Get(id);
+            if (log == null) return null;
+
+            return log;
+        }
+
         public List<LogLearningCSharp> GetAll()
         {
             List<LogLearningCSharp> logs = dbManager.GetAll();
@@ -49,35 +57,6 @@
             return logs;
         }
 
-        public void GetLog()
-        {
-            bool keepGoing = true;
-
-            while (keepGoing)
-            {
-
-                try
-                {
-                    Console.Write("Enter an id to get log(type 0 to quit):");
-                    string input = Console.ReadLine();
-                    int inputId = Convert.ToInt32(input);
-
-                    if (inputId == 0)
-                    {
-                        keepGoing = false;
-                        break;
-                    }
-
-                    dbManager.Get(inputId);
-                }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine("Enter a valid id");
-                }
-
-            }
-
-        }
 
         public LogLearningCSharp? DeleteLog(int id)
         {

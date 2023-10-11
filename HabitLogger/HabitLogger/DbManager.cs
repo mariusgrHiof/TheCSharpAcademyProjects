@@ -52,7 +52,7 @@ namespace HabitLogger
 
         public LogLearningCSharp Get(int id)
         {
-            int logId = 0;
+
             int hours = 0;
             using (SqliteConnection connection = new SqliteConnection($"Data Source=Time.db"))
             {
@@ -62,24 +62,26 @@ namespace HabitLogger
                 command.CommandText = $"SELECT Id, Hours " +
                     $"FROM log " +
                     $"WHERE Id = {id}";
-                command.ExecuteNonQuery();
+                var result = command.ExecuteScalar();
+                if (result is null) return null;
 
-                using (var reader = command.ExecuteReader())
+                try
                 {
-                    while (reader.Read())
-                    {
-                        logId = Convert.ToInt32(reader.GetString(0));
-                        hours = Convert.ToInt32(reader.GetString(1));
-
-
-                    }
+                    hours = Convert.ToInt32(result);
                 }
+                catch (FormatException ex)
+                {
+
+                    Console.WriteLine("Invalid format.");
+                }
+
+
             }
 
             return new LogLearningCSharp
             {
                 Hours = hours,
-                Id = logId
+                Id = id
             };
         }
 
