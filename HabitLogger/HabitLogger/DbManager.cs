@@ -50,7 +50,7 @@ namespace HabitLogger
             }
         }
 
-        public LogLearningCSharp Get(int id)
+        public CSharpLog Get(int id)
         {
 
             int hours = 0;
@@ -78,16 +78,16 @@ namespace HabitLogger
 
             }
 
-            return new LogLearningCSharp
+            return new CSharpLog
             {
                 Hours = hours,
                 Id = id
             };
         }
 
-        public List<LogLearningCSharp> GetAll()
+        public List<CSharpLog> GetAll()
         {
-            List<LogLearningCSharp> logs = new List<LogLearningCSharp>();
+            List<CSharpLog> logs = new List<CSharpLog>();
             using (SqliteConnection connection = new SqliteConnection($"Data Source=Time.db"))
             {
                 connection.Open();
@@ -113,7 +113,7 @@ namespace HabitLogger
                         var logId = Convert.ToInt32(reader.GetString(0));
                         var hours = Convert.ToInt32(reader.GetString(1));
 
-                        logs.Add(new LogLearningCSharp
+                        logs.Add(new CSharpLog
                         {
                             Id = logId,
                             Hours = hours

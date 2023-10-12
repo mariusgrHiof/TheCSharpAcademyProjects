@@ -32,7 +32,7 @@
                         break;
                     case "2":
                         var number = GetNumberInput("Enter hour: ");
-                        _logService.AddLog(new LogLearningCSharp
+                        _logService.AddLog(new CSharpLog
                         {
                             Hours = number,
                         });
@@ -46,7 +46,7 @@
                             break;
                         }
                         var update = GetNumberInput("Enter updated hour: ");
-                        _logService.Update(log.Id, new LogLearningCSharp
+                        _logService.Update(log.Id, new CSharpLog
                         {
                             Hours = update
                         });
@@ -73,7 +73,7 @@
         }
 
 
-        public void PrintAllLogs(List<LogLearningCSharp> logs)
+        public void PrintAllLogs(List<CSharpLog> logs)
         {
             foreach (var log in logs)
             {
@@ -81,7 +81,7 @@
             }
         }
 
-        public void PrintLog(LogLearningCSharp log)
+        public void PrintLog(CSharpLog log)
         {
             Console.WriteLine($"Id: {log.Id} Hours: {log.Hours}");
         }

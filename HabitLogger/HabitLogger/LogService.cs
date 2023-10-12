@@ -10,7 +10,7 @@
             dbManager.CreateDb(dbName);
         }
 
-        public LogLearningCSharp? AddLog(LogLearningCSharp newLog)
+        public CSharpLog? AddLog(CSharpLog newLog)
         {
             if (newLog != null && newLog.Hours > 0)
             {
@@ -25,7 +25,7 @@
             return newLog;
         }
 
-        public LogLearningCSharp Update(int id, LogLearningCSharp updateLog)
+        public CSharpLog Update(int id, CSharpLog updateLog)
         {
             if (updateLog != null && updateLog.Hours > 0)
             {
@@ -42,7 +42,7 @@
             return updateLog;
         }
 
-        public LogLearningCSharp GetLog(int id)
+        public CSharpLog GetLog(int id)
         {
             var log = dbManager.Get(id);
             if (log == null) return null;
@@ -50,15 +50,15 @@
             return log;
         }
 
-        public List<LogLearningCSharp> GetAll()
+        public List<CSharpLog> GetAll()
         {
-            List<LogLearningCSharp> logs = dbManager.GetAll();
+            List<CSharpLog> logs = dbManager.GetAll();
 
             return logs;
         }
 
 
-        public LogLearningCSharp? DeleteLog(int id)
+        public CSharpLog? DeleteLog(int id)
         {
             var log = dbManager.Get(id);
             if (log is null) return null;
