@@ -11,7 +11,7 @@ Developed using C#, .NET and SQLite.
 - [x] You should tell the user the specific format you want the date and time to be logged and not allow any other format.
 - [x] You'll need to create a configuration file that you'll contain your database path and connection strings.
 - [x] You'll need to create a "CodingSession" class in a separate file. It will contain the properties of your coding session: Id, StartTime, EndTime, Duration
-- [ ] The user shouldn't input the duration of the session. It should be calculated based on the Start and End times, in a separate "CalculateDuration" method.
+- [x] The user shouldn't input the duration of the session. It should be calculated based on the Start and End times, in a separate "CalculateDuration" method.
 - [x] The user should be able to input the start and end times manually.
 - [x] When reading from the database, you can't use an anonymous object, you have to read your table into a List of Coding Sessions.
 
