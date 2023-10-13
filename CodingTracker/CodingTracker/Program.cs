@@ -9,7 +9,7 @@ DbManager dbManager = new DbManager();
 CodingController codingController = new CodingController(dbManager);
 UserInput userInput = new UserInput();
 
-var tableData = new List<List<object>>();
+
 
 
 
@@ -62,6 +62,10 @@ void ProcessDelete()
 
         Console.Write("Enter an id: ");
         inputId = Console.ReadLine();
+        if (inputId.Equals("0"))
+        {
+            return;
+        }
         if (!Validation.ValidateId(inputId))
         {
             continue;
@@ -104,6 +108,10 @@ void ProcessUpdate()
 
         Console.Write("Enter an id: ");
         inputId = Console.ReadLine();
+        if (inputId.Equals("0"))
+        {
+            return;
+        }
         if (!Validation.ValidateId(inputId))
         {
             continue;
@@ -133,6 +141,10 @@ void ProcessUpdate()
     while (isValidStartDate == false)
     {
         startDate = userInput.GetDateInput();
+        if (startDate.Equals("0"))
+        {
+            return;
+        }
         if (Validation.ValidateDate(startDate) == true)
         {
             isValidStartDate = true;
@@ -148,6 +160,10 @@ void ProcessUpdate()
     while (isValidEndDate == false)
     {
         endDate = userInput.GetDateInput();
+        if (endDate.Equals("0"))
+        {
+            return;
+        }
         if (Validation.ValidateDate(endDate) == true)
         {
             isValidEndDate = true;
@@ -166,16 +182,17 @@ void ProcessUpdate()
 
 void ProcessGetAllSessions()
 {
+    var tableData = new List<List<object>>();
     var sessions = codingController.GetAllSessions();
 
     foreach (var session in sessions)
     {
-        tableData.Add(new List<object> { session.Id, DateTime.Parse(session.StartTime), DateTime.Parse(session.EndTime) });
+        tableData.Add(new List<object> { session.Id, DateTime.Parse(session.StartTime), DateTime.Parse(session.EndTime), session.CalculateDuration() }); ;
     }
 
     ConsoleTableBuilder
     .From(tableData)
-    .WithColumn("Id", "Start Date", "End Date")
+    .WithColumn("Id", "Start Date", "End Date", "Duration")
     .ExportAndWriteLine();
 }
 
@@ -188,6 +205,10 @@ void ProcessAdd()
     while (isValidStartDate == false)
     {
         startDate = userInput.GetDateInput();
+        if (startDate.Equals("0"))
+        {
+            return;
+        }
         if (Validation.ValidateDate(startDate) == true)
         {
             isValidStartDate = true;
@@ -203,7 +224,11 @@ void ProcessAdd()
     while (isValidEndDate == false)
     {
         endDate = userInput.GetDateInput();
-        if (Validation.ValidateDate(endDate) == true)
+        if (endDate.Equals("0"))
+        {
+            return;
+        }
+        if (Validation.ValidateDate(endDate) == true && Validation.ValidateDateRange(DateTime.Parse(startDate), DateTime.Parse(endDate)))
         {
             isValidEndDate = true;
         }

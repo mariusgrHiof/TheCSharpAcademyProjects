@@ -9,17 +9,25 @@
 
 
 
-        public Duration? CalculateDuration()
+        public String CalculateDuration()
         {
             try
             {
                 TimeSpan timeSpan = DateTime.Parse(EndTime) - DateTime.Parse(StartTime);
+                string time = "";
 
-                return new Duration
+                if (timeSpan.Ticks < 0) return null;
+                if (timeSpan.Hours > 0)
                 {
-                    Hours = timeSpan.Hours,
-                    Minutes = timeSpan.Minutes,
-                };
+                    time = $"{timeSpan.Hours} Hours {timeSpan.Minutes} Minutes";
+
+                }
+                else
+                {
+                    time = $"{timeSpan.Minutes} Minutes";
+                }
+
+                return time;
             }
             catch (Exception ex)
             {
