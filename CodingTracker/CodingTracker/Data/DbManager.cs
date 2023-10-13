@@ -1,27 +1,18 @@
 ﻿using CodingTracker.Models;
 using Microsoft.Data.Sqlite;
+using System.Configuration;
 
 namespace CodingTracker.Data
 {
     public class DbManager
     {
-        private readonly string _dbName;
-
-        public DbManager(string dbName)
-        {
-            _dbName = dbName;
-        }
+        private readonly string? _connectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
 
 
         public void CreateDb()
         {
-            if (string.IsNullOrEmpty(_dbName))
-            {
-                Console.WriteLine("Invalid name");
-                return;
-            }
 
-            using (var connection = new SqliteConnection($"Data Source={_dbName}.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
@@ -46,7 +37,7 @@ namespace CodingTracker.Data
 
         public CodingSession Add(CodingSession session)
         {
-            using (var connection = new SqliteConnection($"Data Source={_dbName}.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
 
@@ -77,7 +68,7 @@ namespace CodingTracker.Data
         public CodingSession? Update(int id, CodingSession session)
         {
 
-            using (var connection = new SqliteConnection($"Data Source={_dbName}.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var queryString = "UPDATE log SET StartTime = @StartTime, EndTime = @EndTime WHERE Id = @Id";
@@ -112,7 +103,7 @@ namespace CodingTracker.Data
             string startTime = string.Empty;
             string endTime = string.Empty;
 
-            using (var connection = new SqliteConnection($"Data Source={_dbName}.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var queryString = "SELECT Id, StartTime, EndTime FROM log WHERE Id = @Id";
@@ -147,7 +138,7 @@ namespace CodingTracker.Data
             string endTime = string.Empty;
             List<CodingSession> sessions = new List<CodingSession>();
 
-            using (var connection = new SqliteConnection($"Data Source={_dbName}.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var queryString = "SELECT Id, StartTime, EndTime FROM log";
@@ -180,7 +171,7 @@ namespace CodingTracker.Data
             string startTime = string.Empty;
             string endTime = string.Empty;
 
-            using (var connection = new SqliteConnection($"Data Source={_dbName}.db"))
+            using (var connection = new SqliteConnection(_connectionString))
             {
                 connection.Open();
                 var session = Get(id);
@@ -208,7 +199,6 @@ namespace CodingTracker.Data
 
             }
 
-            return new CodingSession(startTime, endTime);
         }
     }
 }
