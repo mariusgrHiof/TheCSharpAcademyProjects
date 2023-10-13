@@ -2,7 +2,7 @@
   "profiles": {
     "CodingTracker": {
       "commandName": "Project",
-      "workingDirectory": "C:\\Users\\Marius\\source\\repos\\mariusgrHiof\\TheCSharpAcademyProjects\\CodingTracker\\CodingTracker"
+      "workingDirectory": "C:\\Projects\\TheCSharpAcademyProjects\\CodingTracker\\CodingTracker"
     }
   }
 }
