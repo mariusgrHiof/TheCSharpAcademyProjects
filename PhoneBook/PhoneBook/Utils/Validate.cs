@@ -50,5 +50,10 @@ namespace PhoneBook.Utils
                 return false;
             }
         }
+
+        public static bool IsValidNumber(string number)
+        {
+            return int.TryParse(number, out _);
+        }
     }
 }
