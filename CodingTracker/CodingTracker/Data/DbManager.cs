@@ -54,7 +54,11 @@ namespace CodingTracker.Data
 
                     command.ExecuteNonQuery();
 
-                    return new CodingSession(session.StartTime, session.EndTime);
+                    return new CodingSession
+                    {
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime
+                    };
                 }
                 catch (Exception ex)
                 {
@@ -84,7 +88,11 @@ namespace CodingTracker.Data
 
                     command.ExecuteNonQuery();
 
-                    return new CodingSession(session.StartTime, session.EndTime);
+                    return new CodingSession
+                    {
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime
+                    };
                 }
                 catch (Exception ex)
                 {
@@ -127,7 +135,7 @@ namespace CodingTracker.Data
 
             }
 
-            return new CodingSession(startTime, endTime);
+            return new CodingSession { StartTime = startTime, EndTime = endTime };
 
 
 
@@ -136,6 +144,7 @@ namespace CodingTracker.Data
         {
             string startTime = string.Empty;
             string endTime = string.Empty;
+            int id = 0;
             List<CodingSession> sessions = new List<CodingSession>();
 
             using (var connection = new SqliteConnection(_connectionString))
@@ -153,10 +162,16 @@ namespace CodingTracker.Data
                     if (reader.HasRows == false) return null;
                     while (reader.Read())
                     {
+                        id = reader.GetInt32(0);
                         startTime = reader.GetString(1);
                         endTime = reader.GetString(2);
 
-                        sessions.Add(new CodingSession(startTime, endTime));
+                        sessions.Add(new CodingSession
+                        {
+                            Id = id,
+                            StartTime = startTime,
+                            EndTime = endTime
+                        });
 
 
                     }
@@ -188,7 +203,11 @@ namespace CodingTracker.Data
 
                     command.ExecuteNonQuery();
 
-                    return new CodingSession(session.StartTime, session.EndTime);
+                    return new CodingSession
+                    {
+                        StartTime = session.StartTime,
+                        EndTime = session.EndTime
+                    };
                 }
                 catch (Exception ex)
                 {
