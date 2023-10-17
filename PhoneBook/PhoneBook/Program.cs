@@ -1,32 +1,17 @@
 ﻿
 using PhoneBook.Data;
-using PhoneBook.Models;
-using PhoneBook.Utils;
 
 PhoneBookDbContext context = new PhoneBookDbContext();
 
 PhoneBookRepository db = new PhoneBookRepository(context);
 
-List<Contact> contacts = db.GetContacts();
+var contact = db.GetContact(3);
 
-foreach (var contact in contacts)
+if (contact == null)
 {
-    Console.WriteLine(contact.Name);
-}
-
-string email = "update@gmail.com";
-
-if (!Validate.IsValidEmail(email))
-{
-    Console.WriteLine("Invalid email");
+    Console.WriteLine("Fail to get contact");
 }
 else
 {
-    db.UpdateContact(5, new Contact
-    {
-        Id = 5,
-        Name
-        Email = email,
-        PhoneNumber = "43908543895"
-    });
+    Console.WriteLine($"Id: {contact.Id}, Name: {contact.Name}, Email: {contact.Email}, Phone: {contact.PhoneNumber}");
 }

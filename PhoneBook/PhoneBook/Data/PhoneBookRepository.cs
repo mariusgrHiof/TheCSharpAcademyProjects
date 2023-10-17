@@ -17,6 +17,14 @@ namespace PhoneBook.Data
             return _context.Contacts.ToList();
         }
 
+        public Contact? GetContact(int id)
+        {
+            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
+            if (contact == null) return null;
+
+            return contact;
+        }
+
         public Contact? AddContact(ContactDTO newContact)
         {
             if (newContact == null) return null;
@@ -47,6 +55,18 @@ namespace PhoneBook.Data
             contact.PhoneNumber = updatedContact.PhoneNumber;
 
             _context.Update(contact);
+            _context.SaveChanges();
+
+            return contact;
+        }
+
+
+        public Contact? DeleteContact(int id)
+        {
+            var contact = _context.Contacts.FirstOrDefault(c => c.Id == id);
+            if (contact == null) return null;
+
+            _context.Contacts.Remove(contact);
             _context.SaveChanges();
 
             return contact;
