@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-
 // Code from - https://learn.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
 namespace PhoneBook.Utils
 {
@@ -78,5 +77,20 @@ namespace PhoneBook.Utils
             return !string.IsNullOrWhiteSpace(name);
 
         }
+
+        public static bool IsValidPhoneNumber(string phoneNumber)
+        {
+            string pattern = @"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$";
+
+            if (phoneNumber != null)
+            {
+                return Regex.IsMatch(phoneNumber, pattern);
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
+
 }

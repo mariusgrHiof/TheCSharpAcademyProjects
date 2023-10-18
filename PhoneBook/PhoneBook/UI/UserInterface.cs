@@ -157,7 +157,7 @@ namespace PhoneBook.UI
 
             string? GetName()
             {
-                Console.Write("Enter your name(Type 0 to go back to Main menu): ");
+                Console.Write("Enter your name: ");
                 string? name = Console.ReadLine()?.Trim();
                 if (name == "0") return null;
 
@@ -173,7 +173,7 @@ namespace PhoneBook.UI
 
             string GetEmail()
             {
-                Console.Write("Enter your email: ");
+                Console.Write("Enter your email(Format: test@gmail.com, test@hotmail.no etc): ");
                 string? email = Console.ReadLine()?.Trim();
 
                 while (!Validate.IsValidString(email) || !Validate.IsValidEmail(email))
@@ -188,10 +188,10 @@ namespace PhoneBook.UI
 
             string GetPhoneNumber()
             {
-                Console.Write("Enter your phone number: ");
+                Console.Write("Enter your phone number(Format: 0123456789, 012-345-6789, and (012) -345-6789): ");
                 string? phoneNumber = Console.ReadLine()?.Trim();
 
-                while (!Validate.IsValidString(phoneNumber))
+                while (!Validate.IsValidString(phoneNumber) || !Validate.IsValidPhoneNumber(phoneNumber))
                 {
                     Console.WriteLine("Invalid phoneNumber.Try again.");
                     Console.Write("Enter your phone number: ");
