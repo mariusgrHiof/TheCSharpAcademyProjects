@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using PhoneBook.Data;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 
@@ -54,6 +55,28 @@ namespace PhoneBook.Utils
         public static bool IsValidNumber(string number)
         {
             return int.TryParse(number, out _);
+        }
+
+        public static bool IsValidId(string inputId)
+        {
+            if (!IsValidNumber(inputId)) return false;
+
+            PhoneBookDbContext context = new PhoneBookDbContext();
+
+            PhoneBookRepository db = new PhoneBookRepository(context);
+            int id = int.Parse(inputId);
+
+            var contact = db.GetContact(id);
+
+            return contact != null;
+
+
+        }
+
+        public static bool IsValidString(string name)
+        {
+            return !string.IsNullOrWhiteSpace(name);
+
         }
     }
 }
