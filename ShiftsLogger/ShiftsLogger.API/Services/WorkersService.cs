@@ -92,12 +92,12 @@ namespace ShiftsLogger.API.Services
             return worker;
         }
 
-        public async Task<List<ShiftDTO>> GetWorkerShiftsAsync(int id)
+        public async Task<List<UpdateShiftDTO>> GetWorkerShiftsAsync(int id)
         {
             var shifts = await _context
                .Shifts
                .Include(s => s.Worker)
-               .Select(s => new ShiftDTO
+               .Select(s => new UpdateShiftDTO
                {
                    WorkerId = s.WorkerId,
                    Start = s.Start,

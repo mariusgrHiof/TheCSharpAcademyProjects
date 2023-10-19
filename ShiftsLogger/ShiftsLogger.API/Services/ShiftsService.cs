@@ -14,10 +14,10 @@ namespace ShiftsLogger.API.Services
             _context = context;
         }
 
-        public async Task<List<ShiftDTO>> GetAllShiftsAsync()
+        public async Task<List<UpdateShiftDTO>> GetAllShiftsAsync()
         {
             var shifts = await _context.Shifts
-                .Select(s => new ShiftDTO
+                .Select(s => new UpdateShiftDTO
                 {
                     Start = s.Start,
                     End = s.End,
@@ -30,7 +30,7 @@ namespace ShiftsLogger.API.Services
             return shifts;
         }
 
-        public async Task<ShiftDTO?> GetShiftByIdAsync(int id)
+        public async Task<UpdateShiftDTO?> GetShiftByIdAsync(int id)
         {
             var shift = await _context
                .Shifts
@@ -39,7 +39,7 @@ namespace ShiftsLogger.API.Services
             if (shift == null) return null;
 
             // Map from Shift => ShiftDTO
-            ShiftDTO shiftDTO = new ShiftDTO
+            UpdateShiftDTO shiftDTO = new UpdateShiftDTO
             {
                 Start = shift.Start,
                 End = shift.End,
