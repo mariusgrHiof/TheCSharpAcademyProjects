@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using ShiftsLogger.API.Data;
+using ShiftsLogger.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ShiftsService>();
+builder.Services.AddScoped<WorkersService>();
 
 // Add dbcontext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ShiftsLogger.API.Data;
 using ShiftsLogger.API.DTOs.Shift;
 using ShiftsLogger.API.Models;
+using ShiftsLogger.API.Services;
 
 namespace ShiftsLogger.API.Controllers
 {
@@ -11,47 +11,27 @@ namespace ShiftsLogger.API.Controllers
     public class ShiftsLoggerController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ShiftsService _shiftsService;
 
-        public ShiftsLoggerController(ApplicationDbContext context)
+        public ShiftsLoggerController(ApplicationDbContext context, ShiftsService shiftsService)
         {
             _context = context;
+            _shiftsService = shiftsService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllShifts()
         {
-            var shifts = await _context.Shifts
+            var shiftsDTO = await _shiftsService.GetAllShiftsAsync();
 
-                .Select(s => new ShiftDTO
-                {
-                    Start = s.Start,
-                    End = s.End,
-
-                    WorkerId = s.WorkerId
-                })
-                .ToListAsync();
-
-            return Ok(shifts);
+            return Ok(shiftsDTO);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetShiftById(int id)
         {
-            var shift = await _context
-                .Shifts
-
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (shift == null) return NotFound();
-
-            // Map from Shift => ShiftDTO
-            ShiftDTO shiftDTO = new ShiftDTO
-            {
-                Start = shift.Start,
-                End = shift.End,
-                WorkerId = shift.WorkerId
-            };
-
+            var shiftDTO = await _shiftsService.GetShiftByIdAsync(id);
+            if (shiftDTO == null) return NotFound();
 
             return Ok(shiftDTO);
         }
@@ -59,18 +39,8 @@ namespace ShiftsLogger.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateShift(AddShiftDTO newShift)
         {
-            if (newShift == null) return BadRequest();
-
-            // Map from AddShiftDTO => Shift
-            Shift shift = new Shift
-            {
-                Start = newShift.Start,
-                End = newShift.End,
-                WorkerId = newShift.WorkerId
-            };
-
-            _context.Shifts.Add(shift);
-            await _context.SaveChangesAsync();
+            Shift? shift = await _shiftsService.CreateShiftAsync(newShift);
+            if (shift == null) return BadRequest();
 
             return CreatedAtAction(nameof(GetShiftById), new { Id = shift.Id }, shift);
         }
@@ -79,22 +49,8 @@ namespace ShiftsLogger.API.Controllers
         public async Task<IActionResult> UpdateShift(int id, UpdateShiftDTO updateShift)
         {
 
-            if (updateShift == null) return BadRequest();
-            if (id != updateShift.Id) return BadRequest();
-
-            var shift = await _context
-                .Shifts
-
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (shift == null) return NotFound();
-
-            shift.Start = updateShift.Start;
-            shift.End = updateShift.End;
-            shift.WorkerId = updateShift.WorkerId;
-
-            _context.Shifts.Update(shift);
-            await _context.SaveChangesAsync();
+            Shift? shift = await _shiftsService.UpdateShiftAsync(id, updateShift);
+            if (shift == null) return BadRequest();
 
             return NoContent();
 
@@ -104,12 +60,8 @@ namespace ShiftsLogger.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteShiftById(int id)
         {
-            var shift = await _context.Shifts.FirstOrDefaultAsync(s => s.Id == id);
-
+            var shift = await _shiftsService.DeleteShiftAsync(id);
             if (shift == null) return NotFound();
-
-            _context.Shifts.Remove(shift);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

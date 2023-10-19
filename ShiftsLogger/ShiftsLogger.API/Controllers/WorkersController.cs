@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ShiftsLogger.API.Data;
-using ShiftsLogger.API.DTOs.Shift;
 using ShiftsLogger.API.DTOs.Worker;
 using ShiftsLogger.API.Models;
+using ShiftsLogger.API.Services;
 
 namespace ShiftsLogger.API.Controllers
 {
@@ -12,26 +11,18 @@ namespace ShiftsLogger.API.Controllers
     public class WorkersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly WorkersService _workersService;
 
-        public WorkersController(ApplicationDbContext context)
+        public WorkersController(ApplicationDbContext context, WorkersService workersService)
         {
             _context = context;
+            _workersService = workersService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllWorkers()
         {
-            var workers = await _context
-                .Workers
-                .Select(w => new WorkerDTO
-                {
-                    Id = w.Id,
-                    FirstName = w.FirstName,
-                    LastName = w.LastName,
-                })
-                .ToListAsync();
-
-
+            var workers = await _workersService.GetAllWorkersAsync();
 
             return Ok(workers);
         }
@@ -39,15 +30,8 @@ namespace ShiftsLogger.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWorkerById(int id)
         {
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
-            if (worker == null) return NotFound();
-
-            WorkerDTO workerDTO = new WorkerDTO
-            {
-                Id = worker.Id,
-                FirstName = worker.FirstName,
-                LastName = worker.LastName,
-            };
+            var workerDTO = await _workersService.GetWorkerByIdAsync(id);
+            if (workerDTO == null) return NotFound();
 
             return Ok(workerDTO);
         }
@@ -55,17 +39,8 @@ namespace ShiftsLogger.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWorker(AddWorkerDTO newWorker)
         {
-            if (newWorker == null) return BadRequest();
-
-            Worker worker = new Worker
-            {
-                FirstName = newWorker.FirstName,
-                LastName = newWorker.LastName,
-
-            };
-
-            _context.Workers.Add(worker);
-            await _context.SaveChangesAsync();
+            Worker? worker = await _workersService.CreateWorkerAsync(newWorker);
+            if (worker == null) return BadRequest();
 
             return CreatedAtAction(nameof(GetWorkerById), new { Id = worker.Id }, worker);
         }
@@ -73,17 +48,8 @@ namespace ShiftsLogger.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateWorkerById(int id, UpdateWorkerDTO updateWorker)
         {
-            if (updateWorker == null) return BadRequest();
-            if (id != updateWorker.Id) return BadRequest();
-
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
+            var worker = await _workersService.UpdateWorkerAsync(id, updateWorker);
             if (worker == null) return NotFound();
-
-            worker.FirstName = updateWorker.FirstName;
-            worker.LastName = updateWorker.LastName;
-
-            _context.Workers.Update(worker);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -91,11 +57,8 @@ namespace ShiftsLogger.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkerById(int id)
         {
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
+            var worker = await _workersService.DeleteWorkerAsync(id);
             if (worker == null) return NotFound();
-
-            _context.Workers.Remove(worker);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -106,17 +69,7 @@ namespace ShiftsLogger.API.Controllers
         [HttpGet("{id}/shifts")]
         public async Task<IActionResult> GetWorkerShiftsById(int id)
         {
-            var shifts = await _context
-                .Shifts
-                .Include(s => s.Worker)
-                .Select(s => new ShiftDTO
-                {
-                    WorkerId = s.WorkerId,
-                    Start = s.Start,
-                    End = s.End,
-                })
-                .Where(s => s.WorkerId == id)
-                .ToListAsync();
+            var shifts = await _workersService.GetWorkerShiftsAsync(id);
 
             return Ok(shifts);
         }
