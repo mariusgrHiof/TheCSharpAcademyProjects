@@ -13,7 +13,7 @@ Developed using C#, .NET, Entity Framework and SQL Server.
 - [x] Your API's controller should be lean. Any logic should be handled in a separate "service".
 - [x] You should use SQL Server, not SQLite
 - [x] You should use the "code first" approach to create your database, using Entity Framework's migrations tool.
-- [] Your front-end project needs to have try-catch blocks around the API calls so it handles unexpected errors (i.e. the API isn't running or returns a 500 error.)
+- [ ] Your front-end project needs to have try-catch blocks around the API calls so it handles unexpected errors (i.e. the API isn't running or returns a 500 error.)
 
 
 
