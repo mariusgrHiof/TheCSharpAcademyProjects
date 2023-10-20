@@ -1,8 +1,6 @@
-﻿namespace ShiftsLogger.API.DTOs.Worker
+﻿namespace ShiftsLogger.API.DTOs.Worker;
+public class AddWorkerDTO
 {
-    public class AddWorkerDTO
-    {
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
-    }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
 }

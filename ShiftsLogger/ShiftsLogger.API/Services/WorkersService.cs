@@ -4,109 +4,104 @@ using ShiftsLogger.API.DTOs.Shift;
 using ShiftsLogger.API.DTOs.Worker;
 using ShiftsLogger.API.Models;
 
-namespace ShiftsLogger.API.Services
+namespace ShiftsLogger.API.Services;
+public class WorkersService
 {
-    public class WorkersService
+    private readonly ApplicationDbContext _context;
+
+    public WorkersService(ApplicationDbContext context)
     {
-        private readonly ApplicationDbContext _context;
+        _context = context;
+    }
 
-        public WorkersService(ApplicationDbContext context)
+    public async Task<List<WorkerDTO>> GetAllWorkersAsync()
+    {
+        var workers = await _context
+           .Workers
+           .Select(w => new WorkerDTO
+           {
+               Id = w.Id,
+               FirstName = w.FirstName,
+               LastName = w.LastName,
+           })
+           .ToListAsync();
+
+        return workers;
+    }
+
+    public async Task<WorkerDTO?> GetWorkerByIdAsync(int id)
+    {
+        var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
+        if (worker == null) return null;
+
+        WorkerDTO workerDTO = new WorkerDTO
         {
-            _context = context;
-        }
+            Id = worker.Id,
+            FirstName = worker.FirstName,
+            LastName = worker.LastName,
+        };
+        return workerDTO;
+    }
 
-        public async Task<List<WorkerDTO>> GetAllWorkersAsync()
+    public async Task<Worker?> CreateWorkerAsync(AddWorkerDTO newWorker)
+    {
+        if (newWorker == null) return null;
+
+        Worker worker = new Worker
         {
-            var workers = await _context
-               .Workers
-               .Select(w => new WorkerDTO
-               {
-                   Id = w.Id,
-                   FirstName = w.FirstName,
-                   LastName = w.LastName,
-               })
-               .ToListAsync();
+            FirstName = newWorker.FirstName,
+            LastName = newWorker.LastName,
 
+        };
 
+        _context.Workers.Add(worker);
+        await _context.SaveChangesAsync();
 
-            return workers;
-        }
+        return worker;
+    }
 
-        public async Task<WorkerDTO?> GetWorkerByIdAsync(int id)
-        {
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
-            if (worker == null) return null;
+    public async Task<Worker?> UpdateWorkerAsync(int id, UpdateWorkerDTO updateWorker)
+    {
+        if (updateWorker == null) return null;
+        if (id != updateWorker.Id) return null;
 
-            WorkerDTO workerDTO = new WorkerDTO
-            {
-                Id = worker.Id,
-                FirstName = worker.FirstName,
-                LastName = worker.LastName,
-            };
+        var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
+        if (worker == null) return null;
 
-            return workerDTO;
-        }
+        worker.FirstName = updateWorker.FirstName;
+        worker.LastName = updateWorker.LastName;
 
-        public async Task<Worker?> CreateWorkerAsync(AddWorkerDTO newWorker)
-        {
-            if (newWorker == null) return null;
+        _context.Workers.Update(worker);
+        await _context.SaveChangesAsync();
 
-            Worker worker = new Worker
-            {
-                FirstName = newWorker.FirstName,
-                LastName = newWorker.LastName,
+        return worker;
+    }
 
-            };
+    public async Task<Worker?> DeleteWorkerAsync(int id)
+    {
+        var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
+        if (worker == null) return null;
 
-            _context.Workers.Add(worker);
-            await _context.SaveChangesAsync();
+        _context.Workers.Remove(worker);
+        await _context.SaveChangesAsync();
 
-            return worker;
-        }
+        return worker;
+    }
 
-        public async Task<Worker?> UpdateWorkerAsync(int id, UpdateWorkerDTO updateWorker)
-        {
-            if (updateWorker == null) return null;
-            if (id != updateWorker.Id) return null;
+    public async Task<List<UpdateShiftDTO>> GetWorkerShiftsAsync(int id)
+    {
+        var shifts = await _context
+           .Shifts
+           .Include(s => s.Worker)
+           .Select(s => new UpdateShiftDTO
+           {
+               WorkerId = s.WorkerId,
+               Start = s.Start,
+               End = s.End,
+           })
+           .Where(s => s.WorkerId == id)
+           .ToListAsync();
 
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
-            if (worker == null) return null;
-
-            worker.FirstName = updateWorker.FirstName;
-            worker.LastName = updateWorker.LastName;
-
-            _context.Workers.Update(worker);
-            await _context.SaveChangesAsync();
-
-            return worker;
-        }
-
-        public async Task<Worker?> DeleteWorkerAsync(int id)
-        {
-            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
-            if (worker == null) return null;
-
-            _context.Workers.Remove(worker);
-            await _context.SaveChangesAsync();
-
-            return worker;
-        }
-
-        public async Task<List<UpdateShiftDTO>> GetWorkerShiftsAsync(int id)
-        {
-            var shifts = await _context
-               .Shifts
-               .Include(s => s.Worker)
-               .Select(s => new UpdateShiftDTO
-               {
-                   WorkerId = s.WorkerId,
-                   Start = s.Start,
-                   End = s.End,
-               })
-               .Where(s => s.WorkerId == id)
-               .ToListAsync();
-
-            return shifts;
-        }
+        return shifts;
     }
 }

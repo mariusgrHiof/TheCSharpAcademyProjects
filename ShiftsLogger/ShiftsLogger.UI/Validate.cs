@@ -2,137 +2,94 @@
 using System.Globalization;
 using System.Text.Json;
 
-namespace ShiftsLogger.UI
+namespace ShiftsLogger.UI;
+public static class Validate
 {
-    public static class Validate
+    public static bool IsValidateDate(string date)
     {
+        return DateTime.TryParseExact(date, "dd/MM/yyyy HH:mm", new CultureInfo("nb-NO"), DateTimeStyles.None, out _);
+    }
+
+    public static bool IsValidDateRange(DateTime DateStart, DateTime DateEnd)
+    {
+        TimeSpan timeSpan = DateEnd - DateStart;
+
+        return timeSpan.Ticks > 0;
+
+    }
+    public static bool IsValidNumber(string number)
+    {
+        return int.TryParse(number, out _);
+    }
+
+    public static bool IsValidWorkerId(string inputId)
+    {
+        HttpClient client = new HttpClient();
+
+        var endpoint = new Uri("https://localhost:7184/api/workers");
 
 
-        public static bool IsValidateDate(string date)
+        if (!IsValidNumber(inputId)) return false;
+
+
+        int id = int.Parse(inputId);
+        var result = client.GetAsync($"{endpoint}/{id}").Result;
+
+
+        if (result.IsSuccessStatusCode)
         {
-            return DateTime.TryParseExact(date, "dd/MM/yyyy HH:mm", new CultureInfo("nb-NO"), DateTimeStyles.None, out _);
-        }
+            var json = result.Content.ReadAsStringAsync().Result;
 
-        public static bool IsValidDateRange(DateTime DateStart, DateTime DateEnd)
-        {
-            TimeSpan timeSpan = DateEnd - DateStart;
+            UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
 
-            return timeSpan.Ticks > 0;
-
-        }
-        public static bool IsValidNumber(string number)
-        {
-            return int.TryParse(number, out _);
-        }
-
-        public static bool IsValidWorkerId(string inputId)
-        {
-            HttpClient client = new HttpClient();
-
-            var endpoint = new Uri("https://localhost:7184/api/workers");
-
-
-            if (!IsValidNumber(inputId)) return false;
-
-
-            int id = int.Parse(inputId);
-
-            HttpResponseMessage result = new HttpResponseMessage();
-
-            try
+            if (shift == null)
             {
-                result = client.GetAsync($"{endpoint}/{id}").Result;
-
-                if (result.IsSuccessStatusCode)
-                {
-                    var json = result.Content.ReadAsStringAsync().Result;
-
-                    UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
-
-                    if (shift == null)
-                    {
-                        return false;
-
-                    }
-                    return true;
-
-                }
-                else
-                {
-                    return false;
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine("Request failed.", ex.Message);
                 return false;
 
             }
-
-
+            return true;
         }
-
-
-        public static bool IsValidShiftId(string inputId)
+        else
         {
-            HttpClient client = new HttpClient();
+            return false;
+        }
+    }
 
-            var endpoint = new Uri("https://localhost:7184/api/shiftsLogger");
+    public static bool IsValidShiftId(string inputId)
+    {
+        HttpClient client = new HttpClient();
+
+        var endpoint = new Uri("https://localhost:7184/api/shiftsLogger");
 
 
-            if (!IsValidNumber(inputId)) return false;
+        if (!IsValidNumber(inputId)) return false;
 
 
-            int id = int.Parse(inputId);
+        int id = int.Parse(inputId);
+        var result = client.GetAsync($"{endpoint}/{id}").Result;
 
-            HttpResponseMessage result = new HttpResponseMessage();
 
-            try
+        if (result.IsSuccessStatusCode)
+        {
+            var json = result.Content.ReadAsStringAsync().Result;
+
+            UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
+
+            if (shift == null)
             {
-                result = client.GetAsync($"{endpoint}/{id}").Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    var json = result.Content.ReadAsStringAsync().Result;
-
-                    UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
-
-                    if (shift == null)
-                    {
-                        return false;
-
-                    }
-                    return true;
-
-                }
-                else
-                {
-                    return false;
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine("Request failed.", ex.Message);
                 return false;
+
             }
-
-
-
-
-
-
+            return true;
         }
-
-        public static bool IsValidString(string name)
+        else
         {
-            return !string.IsNullOrWhiteSpace(name);
-
+            return false;
         }
+    }
 
-
+    public static bool IsValidString(string name)
+    {
+        return !string.IsNullOrWhiteSpace(name);
     }
 }
