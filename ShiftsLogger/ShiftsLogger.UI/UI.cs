@@ -57,8 +57,19 @@ namespace ShiftsLogger.UI
 
                 var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
                 string shiftId = GetShiftId();
+                HttpResponseMessage result = new HttpResponseMessage();
 
-                var result = client.GetAsync($"{endpoint}/{shiftId}").Result;
+                try
+                {
+                    result = client.GetAsync($"{endpoint}/{shiftId}").Result;
+
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Request failed.", ex.Message);
+                }
+
 
                 while (!result.IsSuccessStatusCode)
                 {
@@ -110,10 +121,19 @@ namespace ShiftsLogger.UI
             void DeleteShift()
             {
                 var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
+                HttpResponseMessage result = new HttpResponseMessage();
 
                 string? shiftId = GetShiftId();
 
-                var result = client.GetAsync($"{endpoint}/{shiftId}").Result;
+                try
+                {
+                    result = client.GetAsync($"{endpoint}/{shiftId}").Result;
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Request failed.", ex.Message);
+                }
 
                 while (!result.IsSuccessStatusCode)
                 {
@@ -139,7 +159,7 @@ namespace ShiftsLogger.UI
 
             }
 
-            void InsertShift()
+            async void InsertShift()
             {
                 var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
 
@@ -167,7 +187,18 @@ namespace ShiftsLogger.UI
 
                 JsonContent content = JsonContent.Create(newShift);
 
-                var insertRecord = client.PostAsync($"{endpoint}", content);
+                HttpResponseMessage insertRecord = new HttpResponseMessage();
+
+                try
+                {
+                    insertRecord = await client.PostAsync($"{endpoint}", content);
+
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Request failed.", ex.Message);
+                }
 
                 if (insertRecord == null)
                 {
@@ -186,28 +217,42 @@ namespace ShiftsLogger.UI
             {
                 var tableData = new List<List<object>>();
                 var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
-                var result = client.GetAsync(endpoint).Result;
 
-                if (result.IsSuccessStatusCode)
+                HttpResponseMessage result = new HttpResponseMessage();
+
+                try
                 {
-                    var json = result.Content.ReadAsStringAsync().Result;
+                    result = client.GetAsync(endpoint).Result;
 
-                    List<UpdateShiftDTO>? shifts = JsonSerializer.Deserialize<List<UpdateShiftDTO>>(json);
-
-                    if (shifts != null && shifts.Count > 0)
+                    if (result.IsSuccessStatusCode)
                     {
-                        foreach (UpdateShiftDTO shift in shifts)
+                        var json = result.Content.ReadAsStringAsync().Result;
+
+                        List<UpdateShiftDTO>? shifts = JsonSerializer.Deserialize<List<UpdateShiftDTO>>(json);
+
+                        if (shifts != null && shifts.Count > 0)
                         {
-                            tableData.Add(new List<object> { shift.Start, shift.End, shift.WorkerId });
+                            foreach (UpdateShiftDTO shift in shifts)
+                            {
+                                tableData.Add(new List<object> { shift.Start, shift.End, shift.WorkerId });
+                            }
+
                         }
 
+                        ConsoleTableBuilder
+                        .From(tableData)
+                        .WithColumn("Start Date", "End Date", "Worker Id")
+                        .ExportAndWriteLine();
                     }
 
-                    ConsoleTableBuilder
-                    .From(tableData)
-                    .WithColumn("Start Date", "End Date", "Worker Id")
-                    .ExportAndWriteLine();
                 }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Request failed.", ex.Message);
+                }
+
+
             }
 
             string? GetStartDate()

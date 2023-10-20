@@ -37,30 +37,40 @@ namespace ShiftsLogger.UI
 
             int id = int.Parse(inputId);
 
-            var result = client.GetAsync($"{endpoint}/{id}").Result;
+            HttpResponseMessage result = new HttpResponseMessage();
 
-
-            if (result.IsSuccessStatusCode)
+            try
             {
-                var json = result.Content.ReadAsStringAsync().Result;
+                result = client.GetAsync($"{endpoint}/{id}").Result;
 
-                UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
+                if (result.IsSuccessStatusCode)
+                {
+                    var json = result.Content.ReadAsStringAsync().Result;
 
-                if (shift == null)
+                    UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
+
+                    if (shift == null)
+                    {
+                        return false;
+
+                    }
+                    return true;
+
+                }
+                else
                 {
                     return false;
 
                 }
-                return true;
 
             }
-            else
+            catch (Exception ex)
             {
+
+                Console.WriteLine("Request failed.", ex.Message);
                 return false;
 
             }
-
-
 
 
         }
@@ -78,28 +88,39 @@ namespace ShiftsLogger.UI
 
             int id = int.Parse(inputId);
 
-            var result = client.GetAsync($"{endpoint}/{id}").Result;
+            HttpResponseMessage result = new HttpResponseMessage();
 
-
-            if (result.IsSuccessStatusCode)
+            try
             {
-                var json = result.Content.ReadAsStringAsync().Result;
+                result = client.GetAsync($"{endpoint}/{id}").Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var json = result.Content.ReadAsStringAsync().Result;
 
-                UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
+                    UpdateShiftDTO? shift = JsonSerializer.Deserialize<UpdateShiftDTO>(json);
 
-                if (shift == null)
+                    if (shift == null)
+                    {
+                        return false;
+
+                    }
+                    return true;
+
+                }
+                else
                 {
                     return false;
 
                 }
-                return true;
-
             }
-            else
+            catch (Exception ex)
             {
-                return false;
 
+                Console.WriteLine("Request failed.", ex.Message);
+                return false;
             }
+
+
 
 
 
