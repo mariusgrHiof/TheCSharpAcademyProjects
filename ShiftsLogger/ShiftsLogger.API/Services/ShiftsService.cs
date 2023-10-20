@@ -7,12 +7,10 @@ namespace ShiftsLogger.API.Services;
 public class ShiftsService
 {
     private readonly ApplicationDbContext _context;
-
     public ShiftsService(ApplicationDbContext context)
     {
         _context = context;
     }
-
     public async Task<List<UpdateShiftDTO>> GetAllShiftsAsync()
     {
         var shifts = await _context.Shifts
@@ -26,7 +24,6 @@ public class ShiftsService
 
         return shifts;
     }
-
     public async Task<UpdateShiftDTO?> GetShiftByIdAsync(int id)
     {
         var shift = await _context
@@ -45,7 +42,6 @@ public class ShiftsService
 
         return shiftDTO;
     }
-
     public async Task<Shift?> CreateShiftAsync(AddShiftDTO newShift)
     {
         if (newShift == null) return null;
@@ -63,7 +59,6 @@ public class ShiftsService
 
         return shift;
     }
-
     public async Task<Shift?> UpdateShiftAsync(int id, UpdateShiftDTO updateShift)
     {
         if (updateShift == null) return null;
@@ -84,7 +79,6 @@ public class ShiftsService
 
         return shift;
     }
-
     public async Task<Shift?> DeleteShiftAsync(int id)
     {
         var shift = await _context.Shifts.FirstOrDefaultAsync(s => s.Id == id);

@@ -42,7 +42,6 @@ public class WorkersService
         };
         return workerDTO;
     }
-
     public async Task<Worker?> CreateWorkerAsync(AddWorkerDTO newWorker)
     {
         if (newWorker == null) return null;
@@ -59,7 +58,6 @@ public class WorkersService
 
         return worker;
     }
-
     public async Task<Worker?> UpdateWorkerAsync(int id, UpdateWorkerDTO updateWorker)
     {
         if (updateWorker == null) return null;
@@ -76,7 +74,6 @@ public class WorkersService
 
         return worker;
     }
-
     public async Task<Worker?> DeleteWorkerAsync(int id)
     {
         var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
@@ -87,7 +84,6 @@ public class WorkersService
 
         return worker;
     }
-
     public async Task<List<UpdateShiftDTO>> GetWorkerShiftsAsync(int id)
     {
         var shifts = await _context

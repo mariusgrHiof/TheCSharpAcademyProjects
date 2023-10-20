@@ -28,13 +28,10 @@ public static class Validate
 
         var endpoint = new Uri("https://localhost:7184/api/workers");
 
-
         if (!IsValidNumber(inputId)) return false;
-
 
         int id = int.Parse(inputId);
         var result = client.GetAsync($"{endpoint}/{id}").Result;
-
 
         if (result.IsSuccessStatusCode)
         {
@@ -54,20 +51,16 @@ public static class Validate
             return false;
         }
     }
-
     public static bool IsValidShiftId(string inputId)
     {
         HttpClient client = new HttpClient();
 
         var endpoint = new Uri("https://localhost:7184/api/shiftsLogger");
 
-
         if (!IsValidNumber(inputId)) return false;
-
 
         int id = int.Parse(inputId);
         var result = client.GetAsync($"{endpoint}/{id}").Result;
-
 
         if (result.IsSuccessStatusCode)
         {
@@ -87,7 +80,6 @@ public static class Validate
             return false;
         }
     }
-
     public static bool IsValidString(string name)
     {
         return !string.IsNullOrWhiteSpace(name);
