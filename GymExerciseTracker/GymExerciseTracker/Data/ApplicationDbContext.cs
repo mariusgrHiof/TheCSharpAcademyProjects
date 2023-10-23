@@ -4,9 +4,12 @@ using Microsoft.EntityFrameworkCore;
 namespace GymExerciseTracker.Data;
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options)
-    {
-    }
+
     public DbSet<GymSession> GymSessions { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("Server=.;Database=GymTrackerDb;Trusted_Connection=True;TrustServerCertificate=True;");
+    }
 }
 

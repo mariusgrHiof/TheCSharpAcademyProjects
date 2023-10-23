@@ -1,16 +1,17 @@
-﻿using GymExerciseTracker.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using GymExerciseTracker.Controllers;
+using GymExerciseTracker.Data;
+using GymExerciseTracker.Models;
+using GymExerciseTracker.Repository;
+using GymExerciseTracker.Services;
 
-var builder = Host.CreateApplicationBuilder();
+ApplicationDbContext context = new ApplicationDbContext();
+ExerciseRepository exerciseRepository = new ExerciseRepository(context);
+ExerciseService exerciseService = new ExerciseService(exerciseRepository);
+ExerciseController exerciseController = new ExerciseController(exerciseService);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+List<GymSession> gymSessions = exerciseController.GetAllGymSessions();
+
+foreach (var gymSession in gymSessions)
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-var host = builder.Build();
-
-host.Run();
+    Console.WriteLine($"{gymSession.Name}, Sets: {gymSession.Sets}, Reps: {gymSession.Reps}");
+}
