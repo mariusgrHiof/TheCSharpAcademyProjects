@@ -24,8 +24,9 @@ public static class UI
             Console.WriteLine("Type 0 to Close Application");
             Console.WriteLine("---------------------------\n");
 
-            Console.Write(">");
+            Console.Write("Enter an id: ");
             string? command = Console.ReadLine();
+            Console.Clear();
 
             switch (command)
             {
@@ -52,6 +53,8 @@ public static class UI
 
         void UpdateShift()
         {
+            GetAllShifts();
+
             var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
             string shiftId = GetShiftId();
             var result = client.GetAsync($"{endpoint}/{shiftId}").Result;
@@ -100,6 +103,8 @@ public static class UI
 
         void DeleteShift()
         {
+            GetAllShifts();
+
             var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
 
             string? shiftId = GetShiftId();
@@ -172,19 +177,19 @@ public static class UI
             {
                 var json = result.Content.ReadAsStringAsync().Result;
 
-                List<UpdateShiftDTO>? shifts = JsonSerializer.Deserialize<List<UpdateShiftDTO>>(json);
+                List<GetShiftDTO>? shifts = JsonSerializer.Deserialize<List<GetShiftDTO>>(json);
 
                 if (shifts != null && shifts.Count > 0)
                 {
-                    foreach (UpdateShiftDTO shift in shifts)
+                    foreach (GetShiftDTO shift in shifts)
                     {
-                        tableData.Add(new List<object> { shift.Start, shift.End, shift.WorkerId });
+                        tableData.Add(new List<object> { shift.Id, shift.Start, shift.End, shift.Duration, shift.WorkerId });
                     }
                 }
 
                 ConsoleTableBuilder
                 .From(tableData)
-                .WithColumn("Start Date", "End Date", "Worker Id")
+                .WithColumn("Shift Id", "Start Date", "End Date", "Duration", "Worker Id")
                 .ExportAndWriteLine();
             }
         }

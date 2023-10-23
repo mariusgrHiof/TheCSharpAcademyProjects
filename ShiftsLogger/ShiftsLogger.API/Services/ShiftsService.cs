@@ -11,11 +11,12 @@ public class ShiftsService
     {
         _context = context;
     }
-    public async Task<List<UpdateShiftDTO>> GetAllShiftsAsync()
+    public async Task<List<GetShiftDTO>> GetAllShiftsAsync()
     {
         var shifts = await _context.Shifts
-            .Select(s => new UpdateShiftDTO
+            .Select(s => new GetShiftDTO
             {
+                Id = s.Id,
                 Start = s.Start,
                 End = s.End,
                 WorkerId = s.WorkerId,
@@ -24,7 +25,7 @@ public class ShiftsService
 
         return shifts;
     }
-    public async Task<UpdateShiftDTO?> GetShiftByIdAsync(int id)
+    public async Task<GetShiftDTO?> GetShiftByIdAsync(int id)
     {
         var shift = await _context
            .Shifts
@@ -32,9 +33,10 @@ public class ShiftsService
 
         if (shift == null) return null;
 
-        // Map from Shift => ShiftDTO
-        UpdateShiftDTO shiftDTO = new UpdateShiftDTO
+        // Map from Shift => GetShiftDTO
+        GetShiftDTO shiftDTO = new GetShiftDTO
         {
+            Id = shift.Id,
             Start = shift.Start,
             End = shift.End,
             WorkerId = shift.WorkerId
