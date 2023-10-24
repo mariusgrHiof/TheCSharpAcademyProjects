@@ -14,11 +14,11 @@ public class WorkersService
         _context = context;
     }
 
-    public async Task<List<WorkerDTO>> GetAllWorkersAsync()
+    public async Task<List<GetWorkerDTO>> GetAllWorkersAsync()
     {
         var workers = await _context
            .Workers
-           .Select(w => new WorkerDTO
+           .Select(w => new GetWorkerDTO
            {
                Id = w.Id,
                FirstName = w.FirstName,
@@ -29,12 +29,12 @@ public class WorkersService
         return workers;
     }
 
-    public async Task<WorkerDTO?> GetWorkerByIdAsync(int id)
+    public async Task<GetWorkerDTO?> GetWorkerByIdAsync(int id)
     {
         var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == id);
         if (worker == null) return null;
 
-        WorkerDTO workerDTO = new WorkerDTO
+        GetWorkerDTO workerDTO = new GetWorkerDTO
         {
             Id = worker.Id,
             FirstName = worker.FirstName,

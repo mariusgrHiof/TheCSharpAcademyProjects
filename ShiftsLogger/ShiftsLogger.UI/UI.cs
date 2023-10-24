@@ -1,5 +1,6 @@
 ﻿using ConsoleTableExt;
 using ShiftsLogger.API.DTOs.Shift;
+using ShiftsLogger.API.DTOs.Worker;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -24,7 +25,7 @@ public static class UI
             Console.WriteLine("Type 0 to Close Application");
             Console.WriteLine("---------------------------\n");
 
-            Console.Write("Enter an id: ");
+            Console.Write("Enter a number: ");
             string? command = Console.ReadLine();
             Console.Clear();
 
@@ -132,6 +133,7 @@ public static class UI
 
         void InsertShift()
         {
+            GetAllWorkers();
             var endpoint = new Uri("https://localhost:7184/api/ShiftsLogger");
 
             string? startDate = GetStartDate();
@@ -196,7 +198,7 @@ public static class UI
 
         string? GetStartDate()
         {
-            Console.Write("Enter start date: ");
+            Console.Write("Enter a date(format: dd/mm/yyyy HH:MM i.e 20/10/2023 14:54): ");
             string? startDate = Console.ReadLine()?.Trim();
             if (startDate == "0") return null;
 
@@ -211,7 +213,7 @@ public static class UI
 
         string? GetEndDate()
         {
-            Console.Write("Enter end date: ");
+            Console.Write("Enter a date(format: dd/mm/yyyy HH:MM i.e 20/10/2023 14:54): ");
             string? endDate = Console.ReadLine()?.Trim();
             if (endDate == "0") return null;
 
@@ -226,7 +228,7 @@ public static class UI
 
         string GetWorkerId()
         {
-            Console.Write("Enter an id: ");
+            Console.Write("Enter a work Id: ");
             string? input = Console.ReadLine();
 
             while (!Validate.IsValidString(input) || !Validate.IsValidWorkerId(input))
@@ -236,6 +238,33 @@ public static class UI
                 input = Console.ReadLine();
             }
             return input;
+        }
+
+        void GetAllWorkers()
+        {
+            var tableData = new List<List<object>>();
+            var endpoint = new Uri("https://localhost:7184/api/Workers");
+            var result = client.GetAsync(endpoint).Result;
+
+            if (result.IsSuccessStatusCode)
+            {
+                var json = result.Content.ReadAsStringAsync().Result;
+
+                List<GetWorkerDTO>? workers = JsonSerializer.Deserialize<List<GetWorkerDTO>>(json);
+
+                if (workers != null && workers.Count > 0)
+                {
+                    foreach (GetWorkerDTO worker in workers)
+                    {
+                        tableData.Add(new List<object> { worker.Id, worker.FirstName, worker.LastName });
+                    }
+                }
+
+                ConsoleTableBuilder
+                .From(tableData)
+                .WithColumn("Worker Id", "First Name", "Last Name")
+                .ExportAndWriteLine();
+            }
         }
 
         string GetShiftId()
