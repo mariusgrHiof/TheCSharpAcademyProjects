@@ -1,17 +1,90 @@
 ﻿using GymExerciseTracker.Controllers;
 using GymExerciseTracker.Data;
-using GymExerciseTracker.Models;
 using GymExerciseTracker.Repository;
 using GymExerciseTracker.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-ApplicationDbContext context = new ApplicationDbContext();
-ExerciseRepository exerciseRepository = new ExerciseRepository(context);
-ExerciseService exerciseService = new ExerciseService(exerciseRepository);
-ExerciseController exerciseController = new ExerciseController(exerciseService);
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((hostContext, services) =>
+    {
+        // Register your services here.
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlServer("Server=.;Database=GymTrackerDb;Trusted_Connection=True;TrustServerCertificate=True");
+        });
+        services.AddScoped<IExerciseRepository, ExerciseRepository>();
+        services.AddScoped<IExerciseService, ExerciseService>();
 
-List<GymSession> gymSessions = exerciseController.GetAllGymSessions();
+    });
 
-foreach (var gymSession in gymSessions)
+var host = builder.Build();
+
+// Run your application here.
+var serviceProvider = host.Services;
+
+// Retrieve services from the DI container.
+var exerciseService = serviceProvider.GetRequiredService<IExerciseService>();
+
+ExerciseController controller = new ExerciseController(exerciseService);
+
+/*var newSession = controller.AddGymSession(new GymExerciseTracker.Dtos.AddGymSessionDto
 {
-    Console.WriteLine($"{gymSession.Name}, Sets: {gymSession.Sets}, Reps: {gymSession.Reps}");
+    Name = "Delete this",
+    Sets = 5,
+    Reps = 13,
+    Comments = "tjaaa",
+    StartDate = DateTime.Now,
+    EndDate = DateTime.Now,
+});
+
+if (newSession == null)
+{
+    Console.WriteLine("Fail to add exercise.");
 }
+else
+{
+    Console.WriteLine($"{newSession.Name} has been added.");
+}*/
+
+/*var updateSession = controller.UpdateGymSession(2, new GymExerciseTracker.Dtos.UpdateGymSessionDto
+{
+    Id = 2,
+    Name = "Hantler update",
+    Sets = 7,
+    Reps = 20,
+    Comments = "Hardt å komme tilbake :)",
+    StartDate = DateTime.Now,
+    EndDate = DateTime.Now,
+});
+
+if (updateSession == null)
+{
+    Console.WriteLine("Fail to update exercise.");
+}
+else
+{
+    Console.WriteLine($"{updateSession.Name} has been updated.");
+}*/
+
+
+var deleteSession = controller.DeleteGymSession(3);
+
+if (deleteSession == null)
+{
+    Console.WriteLine("Fail to delete exercise.");
+}
+else
+{
+    Console.WriteLine($"{deleteSession.Name} has been updated.");
+}
+
+var gymSessions = controller.GetAllGymSessions();
+
+foreach (var session in gymSessions)
+{
+    Console.WriteLine(session.Name);
+}
+
+host.Run();

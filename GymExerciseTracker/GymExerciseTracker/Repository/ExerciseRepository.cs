@@ -21,7 +21,7 @@ public class ExerciseRepository : IExerciseRepository
     public GymSession DeleteSession(int id)
     {
         var session = _context.GymSessions.FirstOrDefault(gs => gs.Id == id);
-        if (session != null) return null;
+        if (session == null) return null;
 
         _context.GymSessions.Remove(session);
         _context.SaveChanges();
