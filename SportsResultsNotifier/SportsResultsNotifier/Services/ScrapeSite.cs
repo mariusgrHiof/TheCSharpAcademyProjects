@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using SportsResultsNotifier.Models;
 
 namespace SportsResultsNotifier.Services;
 public class ScrapeSite
@@ -7,8 +8,6 @@ public class ScrapeSite
     public readonly string URL = "https://www.basketball-reference.com/boxscores/";
 
     HtmlWeb web = new HtmlWeb();
-
-
 
     public void GetData()
     {
@@ -28,7 +27,24 @@ public class ScrapeSite
         Console.WriteLine(team2);
         Console.WriteLine(team2Score);
 
-        MailService mailService = new MailService();
+        var match = new Match
+        {
+            Team1 = team1,
+            Team2 = team2,
+            Team1Score = team1Score,
+            Team2Score = team2Score
+
+        };
+
+        Console.WriteLine($"{match.Team1} {match.Team1Score}");
+        Console.WriteLine($"{match.Team2} {match.Team2Score}");
+
+        string body = $"{match.Team1} {match.Team1Score}<br>{match.Team2} {match.Team2Score}";
+        string from = "marius.gravningsmyhr@gmail.com";
+        string to = "marius.gravningsmyhr@gmail.com";
+        string subject = "Match result";
+
+        MailService mailService = new MailService(from, to, subject, body);
         mailService.SendEmail();
     }
 
