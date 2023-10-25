@@ -7,7 +7,7 @@ public class GymSession
     public int Reps { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    TimeSpan Duration => EndDate - StartDate;
+    public TimeSpan Duration => EndDate - StartDate;
     public string Comments { get; set; } = string.Empty;
 }
 
