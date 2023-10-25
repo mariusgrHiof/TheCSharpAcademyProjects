@@ -14,7 +14,7 @@ public static class Validate
     {
         TimeSpan timeSpan = DateEnd - DateStart;
 
-        return timeSpan.Ticks > 0;
+        return timeSpan.Ticks >= 0;
 
     }
     public static bool IsValidNumber(string number)
