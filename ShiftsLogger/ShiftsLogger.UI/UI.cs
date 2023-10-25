@@ -15,11 +15,13 @@ public static class UI
 
         while (keepGoing)
         {
+
             Console.WriteLine("\nMain Menu");
             Console.WriteLine("---------\n");
+            Console.WriteLine("Make sure to add a worker before you add a shift!\n");
             Console.WriteLine("What would you like to do?\n");
             Console.WriteLine("Type 1 to View all Shifts");
-            Console.WriteLine("Type 2 to Insert Shift(Check the worker list by typing 5 before inserting a shift.)");
+            Console.WriteLine("Type 2 to Insert Shift");
             Console.WriteLine("Type 3 to Delete a Shift");
             Console.WriteLine("Type 4 to Update a Shift");
             Console.WriteLine("Type 5 to View all Workers");
@@ -56,9 +58,9 @@ public static class UI
                 case "6":
                     InsertWorker();
                     break;
-                //case "7":
-                //    DeleteWorker();
-                //    break;
+                case "7":
+                    DeleteWorker();
+                    break;
                 case "8":
                     UpdateWorker();
                     break;
@@ -221,7 +223,7 @@ public static class UI
             while (!Validate.IsValidateDate(startDate))
             {
                 Console.WriteLine("Invalid date.Try again.");
-                Console.Write("Enter your start date: ");
+                Console.Write("Enter a start date(format: dd/mm/yyyy HH:MM i.e 20/10/2023 14:54): ");
                 startDate = Console.ReadLine();
             }
             return startDate;
@@ -235,7 +237,7 @@ public static class UI
 
             while (!Validate.IsValidateDate(endDate))
             {
-                Console.WriteLine("Invalid date.Try again.");
+                Console.Write("Enter a end date(format: dd/mm/yyyy HH:MM i.e 20/10/2023 14:54): ");
                 Console.Write("Enter your end date: ");
                 endDate = Console.ReadLine();
             }
@@ -372,6 +374,34 @@ public static class UI
             else
             {
                 Console.WriteLine("Error: Fail to update record!");
+            }
+        }
+
+        void DeleteWorker()
+        {
+            GetAllWorkers();
+
+            var endpoint = new Uri("https://localhost:7184/api/Workers");
+            string workerId = GetWorkerId();
+            var result = client.GetAsync($"{endpoint}/{workerId}").Result;
+
+            while (!result.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Invlaid worker id. Try again.");
+                workerId = GetShiftId();
+
+                result = client.GetAsync($"{endpoint}/{workerId}").Result;
+            }
+
+            var deletedContact = client.DeleteAsync($"{endpoint}/{workerId}");
+
+            if (deletedContact != null)
+            {
+                Console.WriteLine("Record deleted!");
+            }
+            else
+            {
+                Console.WriteLine("Error: Fail to remove record!");
             }
         }
 
