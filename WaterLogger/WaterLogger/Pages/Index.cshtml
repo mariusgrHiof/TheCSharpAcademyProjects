@@ -1,0 +1,40 @@
+﻿@page
+@using WaterLogger.Models;
+@model IndexModel
+@{
+    ViewData["Title"] = "Water Logs";
+}
+
+<h3>Water Logs</h3>
+
+<a button type="button" asp-page="./Create">Add Record</a>
+
+<table class="table">
+    @if (Model.WaterLogs.Count <= 0)
+    {
+        <p>No records.</p>
+    }else
+    {
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.WaterLogs[0].Date)</th>
+                <th>@Html.DisplayNameFor(model => model.WaterLogs[0].Quantity)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (WaterLog waterLog in Model.WaterLogs)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(model => waterLog.Date)</td>
+                    <td>@Html.DisplayFor(model => waterLog.Quantity)</td>
+                    <td>
+                        <a button type="button" class="btn btn-danger" asp-page="./Delete" asp-route-id="@waterLog.Id">Delete</a>
+                        <a button type="button" class="btn btn-primary" asp-page="./Update" asp-route-id="@waterLog.Id">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+
+</table>
