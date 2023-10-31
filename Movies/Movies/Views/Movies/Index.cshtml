@@ -1,0 +1,41 @@
+﻿@model List<Movies.Models.Movie>
+
+@{
+    ViewData["Title"] = "Movies";
+}
+<h3>Movies</h3>
+
+@if (Model.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">@Html.DisplayNameFor(model => model[0].Title)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model[0].Genre)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model[0].Year)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model[0].DurationInMinutes)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Movie in Model)
+            {
+                <tr class="table-default">
+                    <td>@Html.DisplayFor(m => Movie.Title)</td>
+                    <td>@Html.DisplayFor(m => Movie.Genre)</td>
+                    <td>@Html.DisplayFor(m => Movie.Year)</td>
+                    <td>@Html.DisplayFor(m => Movie.DurationInMinutes)</td>
+                    <td>
+                        @* <a button type="button" class="btn btn-danger" asp-page="./Delete" asp-route-id="@Movie.Id">Delete</a> *@
+                        @* <a button type="button" class="btn btn-primary" asp-page="./Update" asp-route-id="@Movie.Id">Edit</a> *@
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No movies.</p>
+}
