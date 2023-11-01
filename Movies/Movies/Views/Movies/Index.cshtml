@@ -5,6 +5,8 @@
 }
 <h3>Movies</h3>
 
+<a button type="button" class="btn btn-primary" asp-controller="Movies" asp-action="Create">Add Movie</a>
+
 @if (Model.Count > 0)
 {
     <table class="table table-hover">
@@ -26,8 +28,8 @@
                     <td>@Html.DisplayFor(m => Movie.Year)</td>
                     <td>@Html.DisplayFor(m => Movie.DurationInMinutes)</td>
                     <td>
-                        @* <a button type="button" class="btn btn-danger" asp-page="./Delete" asp-route-id="@Movie.Id">Delete</a> *@
-                        @* <a button type="button" class="btn btn-primary" asp-page="./Update" asp-route-id="@Movie.Id">Edit</a> *@
+                        <a button type="button" class="btn btn-danger" asp-page="" asp-route-id="@Movie.Id">Delete</a>
+                        <a button type="button" class="btn btn-primary" asp-page="" asp-route-id="@Movie.Id">Edit</a>
                     </td>
                 </tr>
             }
