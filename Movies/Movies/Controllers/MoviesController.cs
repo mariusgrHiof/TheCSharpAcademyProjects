@@ -13,6 +13,7 @@ namespace Movies.Controllers
         {
             _context = context;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             List<Movie> movies = await _context.Movies.ToListAsync();
@@ -40,7 +41,7 @@ namespace Movies.Controllers
             return View();
         }
 
-        [HttpGet("{id}")]
+        // GET: Movies/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Movies == null)
@@ -53,14 +54,13 @@ namespace Movies.Controllers
             {
                 return NotFound();
             }
-
             return View(movie);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Year,Genre,DurationInMinutes")] Movie movie)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Movies.Update(movie);
                 await _context.SaveChangesAsync();
