@@ -11,10 +11,25 @@
         <input type="submit" value="Get Todos" />
     </form>
 
+    <form class="form" action="javascript:void(0)" method="POST" onsubmit="addTodo()">
+        <div>
+            <label>Todo: </label>
+            <input type="text" id="todoName"/>
+        </div>
+        <div>
+            <label>Is Complete: </label>
+            <input type="checkbox" id="todoIsComplete"/>
+        </div>
+        <input type="submit" value="Add Todo"/>
+    </form>
+
     <div id="body">
 
     </div>
 
     <script src="js/script.js"></script>
+    <script>
+        getTodos();
+    </script>
 </body>
 </html>

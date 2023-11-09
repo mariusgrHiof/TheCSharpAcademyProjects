@@ -9,6 +9,7 @@ function getTodos() {
 
 function displayItems(data) {
     const body = document.getElementById('body');
+    body.innerHTML = '';
     const ul = document.createElement('ul');
 
     for (var i = 0; i < data.length; i++) {
@@ -19,3 +20,27 @@ function displayItems(data) {
     }
     body.appendChild(ul);
  }
+
+function addTodo() {
+   const todoName = document.getElementById('todoName');
+   const todoIsComplete = document.getElementById('todoIsComplete');
+
+    const newTodo = {
+        name: todoName.value,
+        isComplete: todoIsComplete.checked
+    }
+     
+    fetch('api/todoItems', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTodo)
+    })
+        .then(response => response.json())
+        .then(() => getTodos())
+        .catch(error => console.error('Error:', error));
+
+    todoName.value = '';
+    todoIsComplete.checked = false;
+}
