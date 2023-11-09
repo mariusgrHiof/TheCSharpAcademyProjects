@@ -10,15 +10,43 @@ function getTodos() {
 function displayItems(data) {
     const body = document.getElementById('body');
     body.innerHTML = '';
-    const ul = document.createElement('ul');
+  
 
     for (var i = 0; i < data.length; i++) {
-        const { id, name, isComplete } = data[i];
-        const li = document.createElement('li');
-        li.textContent = `${id} ${name} ${isComplete}`;
-        ul.appendChild(li);
+        const {id, name, isComplete } = data[i];
+        let tr = document.createElement('tr');
+        let tdName = document.createElement('td');
+        let tdIsComplete = document.createElement('td');
+        let tdButtons = document.createElement('td');
+
+        let editButton = document.createElement('button');
+        let deleteButton = document.createElement('button');
+
+        editButton.textContent = 'Edit';
+        editButton.classList.add('btn');
+        editButton.classList.add('btn-info');
+        editButton.addEventListener('click', () => {
+            editTodo(id);
+        });
+
+        deleteButton.textContent = 'Delete';
+        deleteButton.classList.add('btn');
+        deleteButton.classList.add('btn-danger');
+        deleteButton.style.marginLeft = "20px";
+
+
+        tdName.textContent = name;
+        tdIsComplete.textContent = isComplete;
+
+        tdButtons.appendChild(editButton);
+        tdButtons.appendChild(deleteButton);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdIsComplete);
+        tr.appendChild(tdButtons);
+        body.appendChild(tr);
     }
-    body.appendChild(ul);
+    
  }
 
 function addTodo() {
@@ -43,4 +71,8 @@ function addTodo() {
 
     todoName.value = '';
     todoIsComplete.checked = false;
+}
+
+function editTodo(id) {
+    console.log(`Edit todo with id: ${id}`);
 }
