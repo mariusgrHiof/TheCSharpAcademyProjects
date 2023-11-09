@@ -2,8 +2,6 @@
 
 function getTodos() {
     console.log('Getting todos...');
-   //Send request til server
-    // Vis data ved hjelp av displayItems function
     fetch('api/todoItems')
         .then(response => response.json())
         .then(data => displayItems(data));
