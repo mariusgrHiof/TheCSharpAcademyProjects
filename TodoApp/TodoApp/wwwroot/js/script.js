@@ -91,7 +91,6 @@ function displayEditForm(id, name, isComplete) {
     submitButton.type = 'submit';
     submitButton.addEventListener('click', () => {
         editTodo(id, nameInput.value, isCompleteInput.checked);
-        getTodos();
         editForm.style.display = 'none';
     });
     submitButton.textContent = 'Submit';
@@ -117,7 +116,8 @@ function editTodo(id, todoName, todoIsComplete) {
         },
         body: JSON.stringify(updateTodo)
     })
-        .then(response => console.log('Todo updated'))
+        .then(() => getTodos())
         .catch(error => console.error('Error', error));
 
+    
 }
