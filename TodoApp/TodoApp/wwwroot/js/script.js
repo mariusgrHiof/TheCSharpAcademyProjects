@@ -26,7 +26,7 @@ function displayItems(data) {
         editButton.classList.add('btn');
         editButton.classList.add('btn-info');
         editButton.addEventListener('click', () => {
-            editTodo(id);
+            displayEditForm(id,name, isComplete);
         });
 
         deleteButton.textContent = 'Delete';
@@ -73,6 +73,51 @@ function addTodo() {
     todoIsComplete.checked = false;
 }
 
-function editTodo(id) {
+function displayEditForm(id, name, isComplete) {
+    const editForm = document.getElementById('editForm');
+    editForm.innerHTML = '';
+    editForm.style.display = 'block';
+    
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.value = name;
+
+    const isCompleteInput = document.createElement('input');
+    isCompleteInput.type = 'checkbox';
+    isCompleteInput.checked = isComplete;
+
+
+    var submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    submitButton.addEventListener('click', () => {
+        editTodo(id, nameInput.value, isCompleteInput.checked);
+        getTodos();
+        editForm.style.display = 'none';
+    });
+    submitButton.textContent = 'Submit';
+
+    editForm.appendChild(nameInput);
+    editForm.appendChild(isCompleteInput);
+    editForm.appendChild(submitButton);
+
+}
+function editTodo(id, todoName, todoIsComplete) {
     console.log(`Edit todo with id: ${id}`);
+
+    const updateTodo = {
+        id: id,
+        name: todoName,
+        isComplete: todoIsComplete
+    }
+
+    fetch(`api/todoItems/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateTodo)
+    })
+        .then(response => console.log('Todo updated'))
+        .catch(error => console.error('Error', error));
+
 }
