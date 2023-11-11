@@ -1,5 +1,5 @@
 ﻿function getTodos() {
-    
+
     fetch('api/todoItems')
         .then(response => response.json())
         .then(data => displayItems(data));
@@ -9,24 +9,23 @@ function displayItems(data) {
     const body = document.getElementById('body');
     body.innerHTML = '';
 
-        for (var i = 0; i < data.length; i++) {
-        const {id, name, isComplete } = data[i];
+    for (var i = 0; i < data.length; i++) {
+        const { id, name, isComplete } = data[i];
         let tr = document.createElement('tr');
         let tdName = document.createElement('td');
         let tdIsComplete = document.createElement('td');
         let tdButtons = document.createElement('td');
 
-
         let editButton = document.createElement('button');
         let deleteButton = document.createElement('button');
 
-            tr.setAttribute('data-id', id);
+        tr.setAttribute('data-id', id);
 
         editButton.textContent = 'Edit';
         editButton.classList.add('btn');
         editButton.classList.add('btn-info');
         editButton.addEventListener('click', () => {
-            displayEditForm(id,name, isComplete);
+            displayEditForm(id, name, isComplete);
         });
 
         deleteButton.textContent = 'Delete';
@@ -35,9 +34,8 @@ function displayItems(data) {
         deleteButton.style.marginLeft = "20px";
 
         deleteButton.addEventListener('click', () => {
-           deleteTodo(tr.dataset.id);
+            deleteTodo(tr.dataset.id);
         });
-
 
         tdName.textContent = name;
         tdIsComplete.textContent = isComplete;
@@ -50,20 +48,18 @@ function displayItems(data) {
         tr.appendChild(tdButtons);
 
         body.appendChild(tr);
-    
     }
-    
- }
+}
 
 function addTodo() {
-   const todoName = document.getElementById('todoName');
-   const todoIsComplete = document.getElementById('todoIsComplete');
+    const todoName = document.getElementById('todoName');
+    const todoIsComplete = document.getElementById('todoIsComplete');
 
     const newTodo = {
         name: todoName.value,
         isComplete: todoIsComplete.checked
     }
-     
+
     fetch('api/todoItems', {
         method: 'POST',
         headers: {
@@ -83,7 +79,7 @@ function displayEditForm(id, name, isComplete) {
     const editForm = document.getElementById('editForm');
     editForm.innerHTML = '';
     editForm.style.display = 'block';
-    
+
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.value = name;
@@ -104,7 +100,6 @@ function displayEditForm(id, name, isComplete) {
     editForm.appendChild(nameInput);
     editForm.appendChild(isCompleteInput);
     editForm.appendChild(submitButton);
-
 }
 function editTodo(id, todoName, todoIsComplete) {
 
@@ -123,8 +118,6 @@ function editTodo(id, todoName, todoIsComplete) {
     })
         .then(() => getTodos())
         .catch(error => console.error('Error', error));
-
-    
 }
 
 function closeDeleteModal() {
@@ -147,5 +140,5 @@ function deleteTodo(id) {
         })
             .then(() => getTodos())
             .catch(error => console.error(error));
-    } 
+    }
 }
