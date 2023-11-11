@@ -1,7 +1,5 @@
-﻿console.log('Program started');
-
-function getTodos() {
-    console.log('Getting todos...');
+﻿function getTodos() {
+    
     fetch('api/todoItems')
         .then(response => response.json())
         .then(data => displayItems(data));
@@ -10,17 +8,19 @@ function getTodos() {
 function displayItems(data) {
     const body = document.getElementById('body');
     body.innerHTML = '';
-  
 
-    for (var i = 0; i < data.length; i++) {
+        for (var i = 0; i < data.length; i++) {
         const {id, name, isComplete } = data[i];
         let tr = document.createElement('tr');
         let tdName = document.createElement('td');
         let tdIsComplete = document.createElement('td');
         let tdButtons = document.createElement('td');
 
+
         let editButton = document.createElement('button');
         let deleteButton = document.createElement('button');
+
+            tr.setAttribute('data-id', id);
 
         editButton.textContent = 'Edit';
         editButton.classList.add('btn');
@@ -34,6 +34,10 @@ function displayItems(data) {
         deleteButton.classList.add('btn-danger');
         deleteButton.style.marginLeft = "20px";
 
+        deleteButton.addEventListener('click', () => {
+           deleteTodo(tr.dataset.id);
+        });
+
 
         tdName.textContent = name;
         tdIsComplete.textContent = isComplete;
@@ -44,7 +48,9 @@ function displayItems(data) {
         tr.appendChild(tdName);
         tr.appendChild(tdIsComplete);
         tr.appendChild(tdButtons);
+
         body.appendChild(tr);
+    
     }
     
  }
@@ -101,7 +107,6 @@ function displayEditForm(id, name, isComplete) {
 
 }
 function editTodo(id, todoName, todoIsComplete) {
-    console.log(`Edit todo with id: ${id}`);
 
     const updateTodo = {
         id: id,
@@ -120,4 +125,27 @@ function editTodo(id, todoName, todoIsComplete) {
         .catch(error => console.error('Error', error));
 
     
+}
+
+function closeDeleteModal() {
+    const deleteModal = document.querySelector('.modal');
+    deleteModal.style.display = 'none';
+
+}
+
+function deleteTodo(id) {
+    let confirmDelete = window.confirm('Are you sure you want to delete?');
+
+    if (confirmDelete === true) {
+
+        fetch(`api/todoItems/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+        })
+            .then(() => getTodos())
+            .catch(error => console.error(error));
+    } 
 }
