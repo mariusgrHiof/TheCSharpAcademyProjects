@@ -76,29 +76,75 @@ function addTodo() {
 }
 
 function displayEditForm(id, name, isComplete) {
+    const h2 = document.createElement('h2');
     const editForm = document.getElementById('editForm');
+    const divNameInput = document.createElement('div');
+    const divIsCompleteInput = document.createElement('div');
+    const nameInput = document.createElement('input');
+    const isCompleteInput = document.createElement('input');
+    const submitButton = document.createElement('button');
+    const cancelButton = document.createElement('button');
+    const todoLabel = document.createElement('label');
+    const isCompleteLabel = document.createElement('label');
+
     editForm.innerHTML = '';
     editForm.style.display = 'block';
+    editForm.classList.add('px-2');
 
-    const nameInput = document.createElement('input');
+    h2.textContent = "Edit Todo";
+    h2.classList.add('mt-2');
+
+    divNameInput.classList.add('form-group');
+    divNameInput.classList.add('mt-2');
+
+    todoLabel.textContent = 'Todo';
+    todoLabel.style.display = 'block';
+
+    isCompleteLabel.textContent = 'Is Complete';
+
     nameInput.type = 'text';
     nameInput.value = name;
 
-    const isCompleteInput = document.createElement('input');
+    divIsCompleteInput.classList.add('form-group');
+    divIsCompleteInput.classList.add('mt-2');
+
     isCompleteInput.type = 'checkbox';
     isCompleteInput.checked = isComplete;
+    isCompleteInput.style.marginLeft = '6px';
 
+    cancelButton.classList.add('btn');
+    cancelButton.classList.add('btn-info');
+    cancelButton.classList.add('mt-2');
+    cancelButton.type = 'button';
+    cancelButton.addEventListener('click', () => {
+        closeEditForm();
+    });
+    cancelButton.textContent = 'Cancel';
 
-    var submitButton = document.createElement('button');
+    submitButton.classList.add('btn');
+    submitButton.classList.add('btn-primary');
+    submitButton.classList.add('mt-2');
+    submitButton.style.marginLeft = '6px';
+
     submitButton.type = 'submit';
     submitButton.addEventListener('click', () => {
         editTodo(id, nameInput.value, isCompleteInput.checked);
-        editForm.style.display = 'none';
+        closeEditForm();
+
     });
     submitButton.textContent = 'Submit';
 
-    editForm.appendChild(nameInput);
-    editForm.appendChild(isCompleteInput);
+
+
+    divNameInput.appendChild(todoLabel);
+    divNameInput.appendChild(nameInput);
+    divIsCompleteInput.appendChild(isCompleteLabel);
+    divIsCompleteInput.appendChild(isCompleteInput);
+
+    editForm.appendChild(h2);
+    editForm.appendChild(divNameInput);
+    editForm.appendChild(divIsCompleteInput);
+    editForm.appendChild(cancelButton);
     editForm.appendChild(submitButton);
 }
 function editTodo(id, todoName, todoIsComplete) {
@@ -124,6 +170,11 @@ function closeDeleteModal() {
     const deleteModal = document.querySelector('.modal');
     deleteModal.style.display = 'none';
 
+}
+
+function closeEditForm() {
+    const editForm = document.getElementById('editForm');
+    editForm.innerHTML = '';
 }
 
 function deleteTodo(id) {

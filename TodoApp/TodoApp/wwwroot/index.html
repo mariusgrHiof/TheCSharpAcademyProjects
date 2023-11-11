@@ -6,19 +6,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
-    <h1>Todos</h1>
+    <div class="row px-2">
+        <h1>Todos</h1>
+        <div class="col-md-2">
+            <form action="javascript:void(0)" method="POST" onsubmit="addTodo()">
+                <div class="form-group mt-2">
+                    <label for="todo">Todo</label>
+                    <input class="form-control" type="text" id="todoName" />
+                </div>
+                <div class="form-group mt-2">
+                    <label>Is Complete: </label>
+                    <input class="form-check-input" type="checkbox" id="todoIsComplete" />
+                </div>
+                <input type="submit" value="Add Todo" class="btn btn-primary mt-2" />
+            </form>
+        </div>
+    </div>
 
-    <form class="form" action="javascript:void(0)" method="POST" onsubmit="addTodo()">
-        <div>
-            <label>Todo: </label>
-            <input type="text" id="todoName" />
-        </div>
-        <div>
-            <label>Is Complete: </label>
-            <input type="checkbox" id="todoIsComplete" />
-        </div>
-        <input type="submit" value="Add Todo" />
-    </form>
 
     <div id="editForm">
 
