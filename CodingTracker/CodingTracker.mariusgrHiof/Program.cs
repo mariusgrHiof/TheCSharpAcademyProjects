@@ -1,4 +1,3 @@
-﻿
 using CodingTracker.Controllers;
 using CodingTracker.Data;
 using CodingTracker.Models;
@@ -8,12 +7,8 @@ using ConsoleTableExt;
 DbManager dbManager = new DbManager();
 CodingController codingController = new CodingController(dbManager);
 UserInput userInput = new UserInput();
-
-
-
-
-
 bool keepGoing = true;
+
 while (keepGoing)
 {
     Console.WriteLine(@"
@@ -25,9 +20,10 @@ while (keepGoing)
     Type 4 to Delete Record");
 
     string? choice = userInput.GetMenuChoice();
-
+    Console.Clear();
     switch (choice)
     {
+
         case "0":
             Console.WriteLine("Closing app");
             keepGoing = false;
@@ -37,7 +33,6 @@ while (keepGoing)
             break;
         case "2":
             ProcessAdd();
-
             break;
         case "3":
             ProcessUpdate();
@@ -57,9 +52,10 @@ void ProcessDelete()
     string inputId = string.Empty;
     int id = 0;
     CodingSession session = null;
+
     while (isValidId == false)
     {
-
+        ProcessGetAllSessions();
         Console.Write("Enter an id: ");
         inputId = Console.ReadLine();
         if (inputId.Equals("0"))
@@ -72,18 +68,14 @@ void ProcessDelete()
         }
         id = Convert.ToInt32(inputId);
 
-
-
-
         session = codingController.GetSessionById(id);
+
         if (session == null)
         {
             Console.WriteLine("Can't find session.");
             continue;
         }
-
         isValidId = true;
-
     }
 
     var deleteSession = codingController.DeleteSession(id);
@@ -105,7 +97,7 @@ void ProcessUpdate()
     CodingSession session = null;
     while (isValidId == false)
     {
-
+        ProcessGetAllSessions();
         Console.Write("Enter an id: ");
         inputId = Console.ReadLine();
         if (inputId.Equals("0"))
@@ -117,10 +109,6 @@ void ProcessUpdate()
             continue;
         }
         id = Convert.ToInt32(inputId);
-
-
-
-
         session = codingController.GetSessionById(id);
         if (session == null)
         {
@@ -131,9 +119,6 @@ void ProcessUpdate()
         isValidId = true;
 
     }
-
-
-
     bool isValidStartDate = false;
     string? startDate = string.Empty;
     string? endDate = string.Empty;
@@ -154,7 +139,6 @@ void ProcessUpdate()
             Console.WriteLine("Invalid date.Try again");
         }
     }
-
     bool isValidEndDate = false;
 
     while (isValidEndDate == false)
@@ -173,11 +157,7 @@ void ProcessUpdate()
             Console.WriteLine("Invalid date.Try again");
         }
     }
-
-
     codingController.UpdateSession(id, new CodingSession { Id = id, StartTime = startDate, EndTime = endDate });
-
-
 }
 
 void ProcessGetAllSessions()
@@ -187,7 +167,7 @@ void ProcessGetAllSessions()
 
     foreach (var session in sessions)
     {
-        tableData.Add(new List<object> { session.Id, DateTime.Parse(session.StartTime), DateTime.Parse(session.EndTime), session.CalculateDuration() }); ;
+        tableData.Add(new List<object> { session.Id, DateTime.Parse(session.StartTime), DateTime.Parse(session.EndTime), session.CalculateDuration() });
     }
 
     ConsoleTableBuilder
