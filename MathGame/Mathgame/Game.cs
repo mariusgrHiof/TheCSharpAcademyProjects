@@ -38,6 +38,7 @@ public class Game
             }
         }
     }
+
     private void printLogs()
     {
         Console.WriteLine("Previous games");
