@@ -18,7 +18,9 @@ public class MailService
     string smtpAddress = "smtp.gmail.com";
     int portNumber = 587;
     bool enableSSL = true;
-    static string password = _configurationManager.GetSection("Password").Value; //Sender Password  
+
+    static string password = ""; // To get it to work with 2 factor Auth on gmail, 
+                                 // I had to create "App password" and paste the password here.
     private readonly string _from;
     private readonly string _to;
     private readonly string _subject;
