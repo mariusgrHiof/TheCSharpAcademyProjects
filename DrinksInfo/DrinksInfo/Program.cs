@@ -1,72 +1,47 @@
-﻿using DrinksInfo;
+﻿using DrinksInfo.Api;
+using DrinksInfo.Controllers;
 
-string categoriesUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list";
-string glassesUrl = "https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list";
-Dictionary<DrinkCategory, string> categoryMapping = new Dictionary<DrinkCategory, string>
+HttpClient client = new HttpClient()
 {
-    { DrinkCategory.OrdinaryDrink, "Ordinary_Drink" },
-    { DrinkCategory.Cocktail, "Cocktail" },
-    { DrinkCategory.HomemadeLiqueur, "Homemade_Liqueur" },
-    { DrinkCategory.SoftDrink, "Soft_Drink" },
-    { DrinkCategory.Beer, "Beer" },
-    { DrinkCategory.OtherOrUnknow, "Other_/_Unknown" },
-    { DrinkCategory.Cocoa, "Cocoa" },
-    { DrinkCategory.CoffeeOrTea, "Coffee_/_Tea" },
-    { DrinkCategory.Shot, "Shot" },
-    { DrinkCategory.PunchOrPartyDrink, "Punch_/_Party_Drink" }
+    BaseAddress = new Uri("https://www.thecocktaildb.com/api/json/v1/1/")
 };
+ApiClient apiClient = new ApiClient(client);
 
-using HttpClient httpClient = new HttpClient();
-Client client = new Client(httpClient);
+DrinksController drinksController = new DrinksController(apiClient);
 
+var categories = await drinksController.GetCategoriesAsync();
 
-var categoires = await client.GetData<ApiResponse<Category>>(categoriesUrl);
-
-while (true)
+Console.WriteLine("Categories");
+Console.WriteLine("--------------------");
+foreach (var category in categories)
 {
-    Console.WriteLine("Categories");
-    Console.WriteLine("----------------------");
-    foreach (var category in categoires.TName)
-    {
-        Console.WriteLine(category.CategoryName);
-    }
-    Console.WriteLine("----------------------");
+    Console.WriteLine(category.CategoryName);
+}
+Console.WriteLine("--------------------");
 
-    Console.Write("Enter a number(0 to quit): ");
-    string userInput = Console.ReadLine();
-    if (userInput == "0")
-    {
-        break;
-    }
+Console.WriteLine("Drink detail id: 11007");
+Console.WriteLine("--------------------");
 
-    DrinkCategory DrinkInputCategory = (DrinkCategory)Convert.ToInt32(userInput);
+var drink = await drinksController.GetDrinkByIdAsync("110071");
+if (drink == null)
+{
+    Console.WriteLine("Drink not found");
+    Console.WriteLine("--------------------");
 
-    try
-    {
-        await GetDrinkByCategory(categoryMapping.GetValueOrDefault(DrinkInputCategory));
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine(ex.Message);
-    }
+}
+else
+{
+    Console.WriteLine(drink.DrinkName);
+    Console.WriteLine("--------------------");
 }
 
+var drinksByCategoryName = await drinksController.GetDrinksByCategoryAsync("Punch / Party Drink");
 
+Console.WriteLine("Drinks by gatecory name: Punch / Party Drink");
+Console.WriteLine("--------------------");
 
-async Task GetDrinkByCategory(string category)
+foreach (var drinkNyCategory in drinksByCategoryName)
 {
-    try
-    {
-        string url = $"https://www.thecocktaildb.com/api/json/v1/1/filter.php?c={category}";
-        var drinks = await client.GetData<ApiResponse<Drink>>(url);
-
-        foreach (var drink in drinks.TName)
-        {
-            Console.WriteLine(drink.DrinkName);
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"{ex.Message}");
-    }
+    Console.WriteLine(drinkNyCategory.DrinkName);
 }
+Console.WriteLine("--------------------");
