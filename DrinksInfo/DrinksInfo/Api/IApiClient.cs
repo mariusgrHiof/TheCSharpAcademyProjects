@@ -7,5 +7,6 @@ public interface IApiClient
     // Todo: Change to DrinkDetails
     Task<Drink> GetDrinkDetailById(string id);
 
+
 }
 

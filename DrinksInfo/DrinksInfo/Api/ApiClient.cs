@@ -17,6 +17,8 @@ public class ApiClient : IApiClient
         return categoryResponse.Categories;
     }
 
+
+
     public async Task<Drink> GetDrinkDetailById(string id)
     {
         try
