@@ -89,9 +89,15 @@ public class Game
         int result = firstNumber + secondNumber;
 
         Console.WriteLine($"What is the result of this addition: {firstNumber} + {secondNumber} = ?");
-        int userInput = Convert.ToInt32(Console.ReadLine());
+        string userInput = Console.ReadLine();
+        while (!Validate.IsValidNumber(userInput))
+        {
+            Console.WriteLine("Invalid input.Enter a number and try again.");
+            userInput = Console.ReadLine();
+        }
+        int userInputParsed = Convert.ToInt32(userInput);
 
-        if (userInput == result)
+        if (userInputParsed == result)
         {
             Console.WriteLine("Correct!");
         }
@@ -104,7 +110,7 @@ public class Game
         {
             FirstNumber = firstNumber,
             SecondNumber = secondNumber,
-            Result = userInput,
+            Result = userInputParsed,
             CorrectResult = result,
             GameOperator = "+"
         });
@@ -119,9 +125,16 @@ public class Game
         int result = firstNumber - secondNumber;
 
         Console.WriteLine($"What is the result of this substraction: {firstNumber} - {secondNumber} = ?");
-        int userInput = Convert.ToInt32(Console.ReadLine());
 
-        if (userInput == result)
+        string userInput = Console.ReadLine();
+        while (!Validate.IsValidNumber(userInput))
+        {
+            Console.WriteLine("Invalid input.Enter a number and try again.");
+            userInput = Console.ReadLine();
+        }
+        int userInputParsed = Convert.ToInt32(userInput);
+
+        if (userInputParsed == result)
         {
             Console.WriteLine("Correct!");
         }
@@ -134,7 +147,7 @@ public class Game
         {
             FirstNumber = firstNumber,
             SecondNumber = secondNumber,
-            Result = userInput,
+            Result = userInputParsed,
             CorrectResult = result,
             GameOperator = "-"
         });
@@ -149,9 +162,16 @@ public class Game
         int result = firstNumber * secondNumber;
 
         Console.WriteLine($"What is the result of this multiplication: {firstNumber} * {secondNumber} = ?");
-        int userInput = Convert.ToInt32(Console.ReadLine());
 
-        if (userInput == result)
+        string userInput = Console.ReadLine();
+        while (!Validate.IsValidNumber(userInput))
+        {
+            Console.WriteLine("Invalid input.Enter a number and try again.");
+            userInput = Console.ReadLine();
+        }
+        int userInputParsed = Convert.ToInt32(userInput);
+
+        if (userInputParsed == result)
         {
             Console.WriteLine("Correct!");
         }
@@ -164,7 +184,7 @@ public class Game
         {
             FirstNumber = firstNumber,
             SecondNumber = secondNumber,
-            Result = userInput,
+            Result = userInputParsed,
             CorrectResult = result,
             GameOperator = "*"
         });
@@ -186,9 +206,16 @@ public class Game
         }
 
         Console.WriteLine($"What is the result of this division: {firstNumber} / {secondNumber} = ?");
-        int userInput = Convert.ToInt32(Console.ReadLine());
 
-        if (userInput == result)
+        string userInput = Console.ReadLine();
+        while (!Validate.IsValidNumber(userInput))
+        {
+            Console.WriteLine("Invalid input.Enter a number and try again.");
+            userInput = Console.ReadLine();
+        }
+        int userInputParsed = Convert.ToInt32(userInput);
+
+        if (userInputParsed == result)
         {
             Console.WriteLine("Correct!");
         }
@@ -201,7 +228,7 @@ public class Game
         {
             FirstNumber = firstNumber,
             SecondNumber = secondNumber,
-            Result = userInput,
+            Result = userInputParsed,
             CorrectResult = result,
             GameOperator = "/"
         });
