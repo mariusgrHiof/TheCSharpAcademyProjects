@@ -1,7 +1,8 @@
 {
   "profiles": {
     "HabitLogger": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "workingDirectory": "C:\\Projects\\TheCSharpAcademyProjects\\HabitLogger\\HabitLogger"
     }
   }
 }
