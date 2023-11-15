@@ -1,9 +1,8 @@
 ﻿
-
-
 using HabitLogger;
 
-LogService logService = new LogService();
+DbManager dbManager = new DbManager();
+LogService logService = new LogService(dbManager);
 
 logService.SetupDatabase("Time");
 

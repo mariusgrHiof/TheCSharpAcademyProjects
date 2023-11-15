@@ -15,15 +15,25 @@ namespace HabitLogger
                     var command = connection.CreateCommand();
                     command.CommandText = @"CREATE TABLE IF NOT EXISTS log
                         (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                         Hours INT NOT NULL)";
-                    command.ExecuteNonQuery();
+                         Hours INT NOT NULL,
+                        DateCreated TEXT NOT NULL,
+                        DateUpdated TEXT NOT NULL)";
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Fail to create db.");
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
             else
             {
                 Console.WriteLine("Invlaid db name");
             }
-
         }
 
         public void Add(int hours)
@@ -32,56 +42,72 @@ namespace HabitLogger
             {
                 connection.Open();
 
-                string queryString = "INSERT INTO log (Hours) VALUES(@Hours)";
+                var dateCreated = DateTime.Now.ToString();
+                var dateUpdated = DateTime.Now.ToString();
+
+                string queryString = "INSERT INTO log (Hours, DateCreated, DateUpdated) VALUES(@Hours, @DateCreated, @DateUpdated)";
 
                 SqliteCommand command = new SqliteCommand(queryString, connection);
                 command.Parameters.Add("Hours", SqliteType.Integer, hours).Value = hours;
-
+                command.Parameters.Add("DateCreated", SqliteType.Text).Value = dateCreated;
+                command.Parameters.Add("DateUpdated", SqliteType.Text).Value = dateUpdated;
 
                 try
                 {
-
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(ex.Message);
+                    Console.WriteLine("Fail to insert data.");
+                    Console.WriteLine(ex.Message);
                 }
             }
         }
 
         public CSharpLog Get(int id)
         {
-
+            int logId = 0;
             int hours = 0;
+            DateTime dateCreated = new DateTime();
+            DateTime dateUpdated = new DateTime();
+
             using (SqliteConnection connection = new SqliteConnection($"Data Source=Time.db"))
             {
                 connection.Open();
 
                 var command = connection.CreateCommand();
-                command.CommandText = $"SELECT Id, Hours " +
+                command.CommandText = $"SELECT Id, Hours, DateCreated, DateUpdated " +
                     $"FROM log " +
                     $"WHERE Id = {id}";
-                var result = command.ExecuteScalar();
-                if (result is null) return null;
 
                 try
                 {
-                    hours = Convert.ToInt32(result);
+                    command.ExecuteNonQuery();
                 }
-                catch (FormatException ex)
+                catch (Exception ex)
                 {
-
-                    Console.WriteLine("Invalid format.");
+                    Console.WriteLine("Failed to fetch data.");
+                    Console.WriteLine(ex.Message);
                 }
 
-
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        logId = Convert.ToInt32(reader.GetString(0));
+                        hours = Convert.ToInt32(reader.GetString(1));
+                        dateCreated = DateTime.Parse(reader.GetString(2));
+                        dateUpdated = DateTime.Parse(reader.GetString(3));
+                    }
+                }
             }
 
             return new CSharpLog
             {
+                Id = logId,
                 Hours = hours,
-                Id = id
+                DateCreated = dateCreated,
+                DateUpdated = dateUpdated
             };
         }
 
@@ -93,17 +119,17 @@ namespace HabitLogger
                 connection.Open();
 
                 var command = connection.CreateCommand();
-                command.CommandText = $"SELECT Id, Hours " +
+                command.CommandText = $"SELECT Id, Hours, DateCreated, DateUpdated " +
                     $"FROM log";
 
                 try
                 {
-
                     command.ExecuteNonQuery();
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception(ex.Message);
+                    Console.WriteLine("Failed to fetch data.");
+                    Console.WriteLine(ex.Message);
                 }
 
                 using (var reader = command.ExecuteReader())
@@ -112,13 +138,16 @@ namespace HabitLogger
                     {
                         var logId = Convert.ToInt32(reader.GetString(0));
                         var hours = Convert.ToInt32(reader.GetString(1));
+                        var dateCreated = DateTime.Parse(reader.GetString(2));
+                        var dateUpdated = DateTime.Parse(reader.GetString(3));
 
                         logs.Add(new CSharpLog
                         {
                             Id = logId,
-                            Hours = hours
+                            Hours = hours,
+                            DateCreated = dateCreated,
+                            DateUpdated = dateUpdated
                         });
-
                     }
                 }
             }
@@ -131,11 +160,9 @@ namespace HabitLogger
             int result = 0;
             using (var connection = new SqliteConnection("Data Source = Time.db"))
             {
-
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = $"DELETE FROM log WHERE Id = {id}";
-
 
                 try
                 {
@@ -143,27 +170,33 @@ namespace HabitLogger
                 }
                 catch (Exception ex)
                 {
-
                     Console.WriteLine("Fail to delete record.");
+                    Console.WriteLine(ex.Message);
                 }
             }
 
             return result;
         }
 
-
-        public void Update(int id, int hours)
+        public void Update(int id, int hours, DateTime updateDate)
         {
             using (var connection = new SqliteConnection("Data Source = Time.db"))
             {
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = $"UPDATE log " +
-                    $"SET Hours = {hours} " +
+                    $"SET Hours = {hours}, DateUpdated = '{updateDate.ToString()}' " +
                     $"WHERE Id = {id}";
 
-
-                command.ExecuteNonQuery();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to update record.");
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
     }

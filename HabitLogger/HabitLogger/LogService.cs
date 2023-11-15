@@ -2,20 +2,24 @@
 {
     public class LogService
     {
-        // DbManager 
-        DbManager dbManager = new DbManager();
+        private readonly DbManager _dbManager;
+
+        public LogService(DbManager dbManager)
+        {
+            _dbManager = dbManager;
+        }
 
         public void SetupDatabase(string dbName)
         {
-            dbManager.CreateDb(dbName);
+            _dbManager.CreateDb(dbName);
         }
 
         public CSharpLog? AddLog(CSharpLog newLog)
         {
             if (newLog != null && newLog.Hours > 0)
             {
-
-                dbManager.Add(newLog.Hours);
+                _dbManager.Add(newLog.Hours);
+                Console.WriteLine("Log has been created!");
             }
             else
             {
@@ -29,7 +33,7 @@
         {
             if (updateLog != null && updateLog.Hours > 0)
             {
-                dbManager.Update(id, updateLog.Hours);
+                _dbManager.Update(id, updateLog.Hours, updateLog.DateUpdated);
                 Console.WriteLine("Log has been updated!");
             }
             else
@@ -37,14 +41,12 @@
                 return null;
             }
 
-
-
             return updateLog;
         }
 
         public CSharpLog GetLog(int id)
         {
-            var log = dbManager.Get(id);
+            var log = _dbManager.Get(id);
             if (log == null) return null;
 
             return log;
@@ -52,27 +54,25 @@
 
         public List<CSharpLog> GetAll()
         {
-            List<CSharpLog> logs = dbManager.GetAll();
+            List<CSharpLog> logs = _dbManager.GetAll();
 
             return logs;
         }
 
-
         public CSharpLog? DeleteLog(int id)
         {
-            var log = dbManager.Get(id);
+            var log = _dbManager.Get(id);
             if (log is null) return null;
 
-            int result = dbManager.Delete(log.Id);
+            int result = _dbManager.Delete(log.Id);
             if (result == 0)
             {
                 Console.WriteLine("Failed to delete record.");
                 return null;
             }
+            Console.WriteLine("Log has been deleted!");
 
             return log;
-
-
         }
     }
 }
