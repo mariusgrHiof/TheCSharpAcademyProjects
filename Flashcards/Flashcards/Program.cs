@@ -1,5 +1,5 @@
-﻿using Flashcards.Data;
-using Flashcards.Models;
+﻿using Flashcards.Controllers;
+using Flashcards.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,42 +21,16 @@ var serviceProvider = new ServiceCollection()
 // Resolve the DbContext from the service provider
 var dbContext = serviceProvider.GetRequiredService<FlashcardsDbContext>();
 
-dbContext.Database.EnsureCreated();
+DataAccess dataAccess = new DataAccess(dbContext);
+StacksController stacksController = new StacksController(dataAccess);
 
-dbContext.Stacks.Add(new Stack
+var stacks = await stacksController.GetStacksAsync();
+
+var flashcard = await stacksController.DeleteFlashcardById(2, 6);
+
+if (flashcard == null)
 {
-    Name = "Sql Database",
-    Flashcards = new List<Flashcard>
-    {
-        new Flashcard
-        {
-            Question = "Db?",
-            Answer = "Database"
-        },
-          new Flashcard
-        {
-            Question = "Stored procedure?",
-            Answer = "SQL Instructions"
-        },
-
-    }
-});
-
-try
-{
-    dbContext.SaveChanges();
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Fail to insert data. Details: ", ex.Message);
-
+    Console.WriteLine("Fail to delete record");
 }
 
-var stack = dbContext.Stacks
-    .Include(s => s.Flashcards)
-    .FirstOrDefault(s => s.Id == 3);
-
-foreach (var flascard in stack.Flashcards)
-{
-    Console.WriteLine($"{flascard.Id} {flascard.Question} {flascard.Answer}");
-}
+Console.WriteLine("Record deleted!");
