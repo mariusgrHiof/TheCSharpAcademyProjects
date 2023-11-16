@@ -1,5 +1,6 @@
 ﻿using Flashcards.Controllers;
 using Flashcards.Data;
+using Flashcards.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +22,18 @@ var serviceProvider = new ServiceCollection()
 // Resolve the DbContext from the service provider
 var dbContext = serviceProvider.GetRequiredService<FlashcardsDbContext>();
 
+
+
 DataAccess dataAccess = new DataAccess(dbContext);
+dataAccess.EnsureDbExists();
+
 StacksController stacksController = new StacksController(dataAccess);
 
-var stacks = await stacksController.GetStacksAsync();
+UserInterface userInterface = new UserInterface(stacksController);
+
+userInterface.Run();
+
+/*var stacks = await stacksController.GetStacksAsync();
 
 var flashcard = await stacksController.DeleteFlashcardById(2, 6);
 
@@ -32,5 +41,9 @@ if (flashcard == null)
 {
     Console.WriteLine("Fail to delete record");
 }
+else
+{
+    Console.WriteLine("Record deleted!");
 
-Console.WriteLine("Record deleted!");
+}
+*/

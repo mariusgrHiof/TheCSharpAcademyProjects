@@ -13,7 +13,17 @@ public class DataAccess
 
     public async Task<List<Stack>> GetAllStacksAsync()
     {
-        return await _context.Stacks.ToListAsync();
+        try
+        {
+            return await _context.Stacks.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
+
+
     }
     public async Task<List<Stack>> GetAllStacksWithFlashcardsAsync()
     {
@@ -202,6 +212,24 @@ public class DataAccess
         {
             Console.WriteLine($"Fail to delete record.Details: {ex.Message}");
             return null;
+        }
+    }
+
+    public void EnsureDbExists()
+    {
+        // Check if the database exists
+        if (!_context.Database.CanConnect())
+        {
+            Console.WriteLine("Database does not exist. Creating...");
+
+            // Create the database
+            _context.Database.EnsureCreated();
+
+            Console.WriteLine("Database created successfully.");
+        }
+        else
+        {
+            return;
         }
     }
 

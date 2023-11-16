@@ -7,7 +7,10 @@ public class FlashcardsDbContext : DbContext
 {
     public FlashcardsDbContext(DbContextOptions options) : base(options)
     {
+
     }
     public DbSet<Stack> Stacks { get; set; }
+
+
 }
 
