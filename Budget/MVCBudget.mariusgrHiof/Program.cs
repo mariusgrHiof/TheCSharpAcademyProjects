@@ -1,4 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using MVCBudget.mariusgrHiof.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add dbcontext
+builder.Services.AddDbContext<BudgetContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BudgetDb"));
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
