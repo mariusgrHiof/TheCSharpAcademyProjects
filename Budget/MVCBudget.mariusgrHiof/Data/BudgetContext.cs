@@ -26,8 +26,8 @@ public class BudgetContext : DbContext
             new Category()
             {
                 Id = 2,
-                Name = "Car Parts",
-                Description = "Car parts",
+                Name = "Electronic",
+                Description = "Electronic devices",
             }
             );
 
@@ -47,6 +47,14 @@ public class BudgetContext : DbContext
                 Amount = 22500,
                 CategoryId = 1,
                 Date = new DateTime(2022, 5, 4),
+            },
+            new Transaction()
+            {
+                Id = 3,
+                Name = "Samsung TV",
+                Amount = 10000,
+                CategoryId = 2,
+                Date = new DateTime(2021, 1, 24)
             }
             );
     }
