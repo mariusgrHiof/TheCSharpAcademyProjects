@@ -1,20 +1,11 @@
-<<<<<<< HEAD:Movies/Movies/Properties/launchSettings.json
-﻿{
-=======
 {
-  "$schema": "http://json.schemastore.org/launchsettings.json",
->>>>>>> Removed views.:Budget/MVCBudget/Properties/launchSettings.json
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-<<<<<<< HEAD:Movies/Movies/Properties/launchSettings.json
-      "applicationUrl": "http://localhost:10401",
-      "sslPort": 44345
-=======
-      "applicationUrl": "http://localhost:62409",
-      "sslPort": 44301
->>>>>>> Removed views.:Budget/MVCBudget/Properties/launchSettings.json
+      "applicationUrl": "http://localhost:11336",
+      "sslPort": 44385
     }
   },
   "profiles": {
@@ -22,11 +13,8 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-<<<<<<< HEAD:Movies/Movies/Properties/launchSettings.json
-      "applicationUrl": "http://localhost:5088",
-=======
-      "applicationUrl": "http://localhost:5150",
->>>>>>> Removed views.:Budget/MVCBudget/Properties/launchSettings.json
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5067",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -35,11 +23,8 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-<<<<<<< HEAD:Movies/Movies/Properties/launchSettings.json
-      "applicationUrl": "https://localhost:7179;http://localhost:5088",
-=======
-      "applicationUrl": "https://localhost:7159;http://localhost:5150",
->>>>>>> Removed views.:Budget/MVCBudget/Properties/launchSettings.json
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7059;http://localhost:5067",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -47,6 +32,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": false,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

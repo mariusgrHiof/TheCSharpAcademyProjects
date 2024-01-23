@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-<<<<<<< HEAD:WaterLogger/WaterLogger.sln
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaterLogger", "WaterLogger\WaterLogger.csproj", "{60B36158-12C5-4444-98AF-43E1504459A3}"
-=======
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBudget", "MVCBudget\MVCBudget.csproj", "{E57B2BFA-6683-4235-A7A6-21D1BEFE439F}"
->>>>>>> Removed views.:Budget/MVCBudget.sln
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBudget", "MVCBudget\MVCBudget.csproj", "{E57B2BFA-6683-4235-A7A6-21D1BEFE439F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,26 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<<<<<<< HEAD:WaterLogger/WaterLogger.sln
-		{60B36158-12C5-4444-98AF-43E1504459A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60B36158-12C5-4444-98AF-43E1504459A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60B36158-12C5-4444-98AF-43E1504459A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60B36158-12C5-4444-98AF-43E1504459A3}.Release|Any CPU.Build.0 = Release|Any CPU
-=======
 		{E57B2BFA-6683-4235-A7A6-21D1BEFE439F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E57B2BFA-6683-4235-A7A6-21D1BEFE439F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E57B2BFA-6683-4235-A7A6-21D1BEFE439F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E57B2BFA-6683-4235-A7A6-21D1BEFE439F}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> Removed views.:Budget/MVCBudget.sln
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-<<<<<<< HEAD:WaterLogger/WaterLogger.sln
-		SolutionGuid = {8D865B01-8903-45E9-B7E7-0211B142B7A1}
-=======
 		SolutionGuid = {3C23A995-468E-484A-8516-D36E48108B85}
->>>>>>> Removed views.:Budget/MVCBudget.sln
 	EndGlobalSection
 EndGlobal
