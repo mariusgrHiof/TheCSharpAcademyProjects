@@ -10,21 +10,26 @@
   <div class="row px-2">
     <h1>Transactions</h1>
     <div class="col-md-2">
-      <form action="javascript:void(0)" method="POST" onsubmit="">
-        <div class="form-group mt-2">
-          <label for="transactionName">Name</label>
-          <input class="form-control" type="text" id="transactionName" />
-        </div>
-        <div class="form-group mt-2">
-          <label for="transactionAmount">Amount</label>
-          <input class="form-control" type="number" id="transactionAmount" />
-        </div>
-        <div class="form-group mt-2">
-          <label for="categoryName">Category name</label>
-          <input class="form-control" type="text" id="categoryName" />
-        </div>
-        <input type="submit" value="Add Transaction" class="btn btn-primary mt-2" />
-      </form>
+        <form id="formEl" action="javascript:void(0)" method="POST" onsubmit="addTransaction()">
+            <div class="form-group mt-2">
+                <label for="transactionName">Name</label>
+                <input class="form-control" type="text" id="transactionName" />
+            </div>
+            <div class="form-group mt-2">
+                <label for="transactionAmount">Amount</label>
+                <input class="form-control" type="number" id="transactionAmount" />
+            </div>
+            <div class="form-group mt-2">
+                <label for="categoryName">Category name</label>
+                <select id="selectId">
+                </select>
+            </div>
+            <div class="form-group mt-2">
+                <label for="transactionDate">Date</label>
+                <input class="form-control" type="Date" id="transactionDate" />
+            </div>
+            <input type="submit" value="Add Transaction" class="btn btn-primary mt-2" />
+        </form>
     </div>
   </div>
 

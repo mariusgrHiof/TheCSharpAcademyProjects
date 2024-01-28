@@ -7,6 +7,7 @@ using MVCBudget.Models;
 namespace MVCBudget.mariusgrHiof.Controllers;
 
 [Route("api/[controller]")]
+[ApiController]
 public class TransactionsController : ControllerBase
 {
     private readonly BudgetContext _context;
@@ -16,7 +17,7 @@ public class TransactionsController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("GetTransactions")]
+    [HttpGet]
     public async Task<IActionResult> GetTransactions()
     {
         var transactions = await _context.Transactions
@@ -50,12 +51,60 @@ public class TransactionsController : ControllerBase
             .Transactions
             .Include(t => t.Category)
             .FirstOrDefaultAsync(t => t.Id == id);
-        if (transaction == null)
+        if (transaction is null)
         {
             return NotFound();
         }
 
-        return Ok(transaction);
+        var transactionDto = new TransactionDto
+        {
+            Name = transaction.Name,
+            Id = transaction.Id,
+            Date = transaction.Date,
+            Amount = transaction.Amount,
+            CategoryDto = new CategoryDto
+            {
+                Id = transaction.Category.Id,
+                Name = transaction.Category.Name,
+            }
+        };
+
+        return Ok(transactionDto);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateTransaction(CreateTransactionDto newTransaction)
+    {
+        var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == newTransaction.CategoryId);
+        if (category is null) return BadRequest("Category not found");
+
+        var transaction = new Transaction
+        {
+            Name = newTransaction.Name,
+            Amount = newTransaction.Amount,
+            Date = newTransaction.Date,
+            CategoryId = category.Id,
+
+        };
+
+        _context.Transactions.Add(transaction);
+        await _context.SaveChangesAsync();
+
+        var transactionDto = new TransactionDto
+        {
+            Id = transaction.Id,
+            Name = transaction.Name,
+            Date = transaction.Date,
+            Amount = transaction.Amount,
+            CategoryDto = new CategoryDto
+            {
+                Id = transaction.Category.Id,
+                Name = transaction.Category.Name,
+            }
+
+        };
+
+        return CreatedAtAction(nameof(GetTransaction), new { id = transactionDto.Id }, transactionDto);
     }
 
     [HttpPut]
@@ -68,4 +117,6 @@ public class TransactionsController : ControllerBase
         return NoContent();
 
     }
+
+
 }

@@ -2,17 +2,40 @@ console.log("Script running");
 
 function getTransactions() {
     console.log("Getting transctions...");
-    fetch("/api/Transactions/GetTransactions")
+    fetch("/api/Transactions")
         .then(response => response.json())
         .then(data => displayItems(data));
 
 }
 
+function getCategories() {
+    console.log("Getting categories...");
+    fetch("/api/categories")
+        .then(response => response.json())
+        .then(data => displayCategories(data));
 
+}
+
+
+function displayCategories(data) {
+    const selectElement = document.querySelector("#selectId");
+
+    for (var i = 0; i < data.length; i++) {
+        const { id, name } = data[i];
+        const option = document.createElement("option");
+        option.value = id;
+        option.text = name;
+        selectElement.appendChild(option);
+    }
+
+    
+}
 
 function displayItems(transactions) {
     const tableBody = document.querySelector("#tableBody");
     tableBody.innerHTML = "";
+
+    getCategories();
 
     for (var i = 0; i < transactions.length; i++) {
         const { id, name, date, amount, categoryDto } = transactions[i];
@@ -191,4 +214,33 @@ function editTransaction(transactionId, name, amount, date, category) {
     })
         .then(() => getTransactions())
         .catch(error => console.error('Error', error));
+}
+
+function addTransaction(name, amount, date, categoryId) {
+    const formEl = document.getElementById("formEl");
+    const selectedCategoryId = document.querySelector("#selectId").value;
+    const transactionName = document.querySelector("#transactionName").value;
+    const transactionAmount =document.querySelector("#transactionAmount").value;
+    const transactionDate = document.querySelector("#transactionDate").value;
+
+    console.log(`Add transaction: Name: ${transactionName} Amount: ${transactionAmount} Category Id: ${selectedCategoryId} Date: ${transactionDate}`);
+
+    var newTransaction = {
+        name: transactionName,
+        date: transactionDate,
+        amount: parseInt(transactionAmount),
+        categoryId: selectedCategoryId
+    }
+
+    fetch("/api/transactions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newTransaction)
+    })
+        .then(response => response.json())
+        .then(data => getTransactions())
+
+    formEl.reset();
 }
